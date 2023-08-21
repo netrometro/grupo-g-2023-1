@@ -9,6 +9,7 @@ function Home({ navigation }: AuthScreenProps) {
       <View></View>
       <ScrollView></ScrollView>
       {/* <FlatList></FlatList> */}
+      <Navbar navigation={navigation} />
     </View>
   );
 }

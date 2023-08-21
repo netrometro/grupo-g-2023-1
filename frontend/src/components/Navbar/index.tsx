@@ -15,61 +15,64 @@ import {
   House,
   GlobeHemisphereWest,
 } from "phosphor-react-native";
-import { navigate } from "./NavigationService";
-function Navbar() {
+import { AuthScreenProps } from "../../types/PagesTypeList";
+import { useRoute } from "@react-navigation/core";
+function Navbar({ navigation }: AuthScreenProps) {
+  const route = useRoute();
   const iconSize = 40;
   const [selectedIcon, setSelectedIcon] = React.useState("home");
   const isIconFilled = (iconWeight: string) => {
     return selectedIcon === iconWeight ? "fill" : "regular";
   };
+  React.useEffect(() => {
+    setSelectedIcon(route.name);
+    console.log(route.name);
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.iconsDivider}>
         <TouchableOpacity
           onPress={() => {
-            setSelectedIcon("Gift"), navigate("Gifts");
+            navigation.navigate("Gifts");
           }}
         >
-          <Gift size={iconSize} color="#5A875D" weight={isIconFilled("Gift")} />
+          <Gift
+            size={iconSize}
+            color="#5A875D"
+            weight={isIconFilled("Gifts")}
+          />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setSelectedIcon("Bell"), navigate("Notifications");
-          }}
-        >
-          <Bell size={iconSize} color="#5A875D" weight={isIconFilled("Bell")} />
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => {
-            setSelectedIcon("House"), navigate("Home");
+            navigation.navigate("Home");
           }}
         >
           <House
             size={iconSize}
             color="#5A875D"
-            weight={isIconFilled("House")}
+            weight={isIconFilled("Home")}
           />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setSelectedIcon("Star"), navigate("EcoRank");
+            navigation.navigate("EcoRank");
           }}
         >
           <GlobeHemisphereWest
             size={iconSize}
             color="#5A875D"
-            weight={isIconFilled("Star")}
+            weight={isIconFilled("EcoRank")}
           />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setSelectedIcon("UserCircle"), navigate("Profile");
+            navigation.navigate("Profile");
           }}
         >
           <UserCircle
             size={iconSize}
             color="#5A875D"
-            weight={isIconFilled("UserCircle")}
+            weight={isIconFilled("Profile")}
           />
         </TouchableOpacity>
       </View>
