@@ -1,8 +1,7 @@
 export type LockScreenParamList = {
   AuthScreen: undefined;
   Home: undefined;
-  Notifications: undefined;
-  Profile: undefined;
+  UserProfile: undefined;
   Gifts: undefined;
   EcoRank: undefined;
 };
