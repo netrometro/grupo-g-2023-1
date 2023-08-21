@@ -8,7 +8,6 @@ function Home({ navigation }: AuthScreenProps) {
     <View style={styles.container}>
       <View></View>
       <ScrollView></ScrollView>
-      <Navbar navigation={navigation} />
       {/* <FlatList></FlatList> */}
     </View>
   );

@@ -10,13 +10,14 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { AuthScreenProps } from "../../types/PagesTypeList";
+import { navigate } from "../../components/Navbar/NavigationService";
 
 export function AuthScreen({ navigation }: AuthScreenProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const handleEmailPassword = () => {
-    navigation.navigate("Home");
+    navigate("Home");
   };
   return (
     <KeyboardAvoidingView

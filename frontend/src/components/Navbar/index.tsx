@@ -15,8 +15,8 @@ import {
   House,
   GlobeHemisphereWest,
 } from "phosphor-react-native";
-import { AuthScreenProps } from "../../types/PagesTypeList";
-function Navbar({ navigation }: AuthScreenProps) {
+import { navigate } from "./NavigationService";
+function Navbar() {
   const iconSize = 40;
   const [selectedIcon, setSelectedIcon] = React.useState("home");
   const isIconFilled = (iconWeight: string) => {
@@ -27,21 +27,21 @@ function Navbar({ navigation }: AuthScreenProps) {
       <View style={styles.iconsDivider}>
         <TouchableOpacity
           onPress={() => {
-            setSelectedIcon("Gift"), navigation.navigate("Gifts");
+            setSelectedIcon("Gift"), navigate("Gifts");
           }}
         >
           <Gift size={iconSize} color="#5A875D" weight={isIconFilled("Gift")} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setSelectedIcon("Bell"), navigation.navigate("Notifications");
+            setSelectedIcon("Bell"), navigate("Notifications");
           }}
         >
           <Bell size={iconSize} color="#5A875D" weight={isIconFilled("Bell")} />
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setSelectedIcon("House"), navigation.navigate("Home");
+            setSelectedIcon("House"), navigate("Home");
           }}
         >
           <House
@@ -52,7 +52,7 @@ function Navbar({ navigation }: AuthScreenProps) {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            setSelectedIcon("Star"), navigation.navigate("EcoRank");
+            setSelectedIcon("Star"), navigate("EcoRank");
           }}
         >
           <GlobeHemisphereWest
@@ -61,7 +61,11 @@ function Navbar({ navigation }: AuthScreenProps) {
             weight={isIconFilled("Star")}
           />
         </TouchableOpacity>
-        <TouchableOpacity onPress={() => setSelectedIcon("UserCircle")}>
+        <TouchableOpacity
+          onPress={() => {
+            setSelectedIcon("UserCircle"), navigate("Profile");
+          }}
+        >
           <UserCircle
             size={iconSize}
             color="#5A875D"
