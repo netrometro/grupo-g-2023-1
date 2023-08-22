@@ -17,7 +17,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
   const [error, setError] = useState(false);
   const handleEmailPassword = () => {
     axios
-      .post("http://localhost:3000/login", { email, password })
+      .post("https://ecoaware-cm57.onrender.com/login", { email, password })
       .then((res) => {
         if (res.status === 200) {
           setError(false);
