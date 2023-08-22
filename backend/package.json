@@ -7,6 +7,7 @@
     "node": "18"
   },
   "scripts": {
+    "test": "tsx watch src/server.ts",
     "dev": "tsx src/server.ts",
     "build": "tsup src",
     "start": "node dist/server.js"
@@ -15,15 +16,18 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^20.5.0",
-    "prisma": "^5.2.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/node": "^20.5.1",
+    "prisma": "^5.1.1",
+    "tsup": "^7.2.0",
     "tsx": "^3.12.7",
     "typescript": "^5.1.6"
   },
   "dependencies": {
-    "@prisma/client": "^5.2.0",
+    "@fastify/formbody": "^7.4.0",
+    "@prisma/client": "^5.1.1",
+    "bcrypt": "^5.1.1",
     "fastify": "^4.21.0",
-    "tsup": "^7.2.0",
     "zod": "^3.22.1"
   }
 }
