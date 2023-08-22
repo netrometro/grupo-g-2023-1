@@ -3,16 +3,16 @@ import React from "react";
 import Navbar from "../../components/Navbar";
 import { AuthScreenProps } from "../../types/PagesTypeList";
 
-const EcoRank = ({ navigation }: AuthScreenProps) => {
+const EcoInfo = ({ navigation }: AuthScreenProps) => {
   return (
     <View style={styles.container}>
-      <Text>EcoRank</Text>
+      <Text>EcoInfo</Text>
       <Navbar navigation={navigation} />
     </View>
   );
 };
 
-export default EcoRank;
+export default EcoInfo;
 
 const styles = StyleSheet.create({
   container: {
