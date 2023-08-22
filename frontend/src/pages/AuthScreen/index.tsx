@@ -10,13 +10,25 @@ import {
 } from "react-native";
 import React, { useState } from "react";
 import { AuthScreenProps } from "../../types/PagesTypeList";
-
+import axios from "axios";
 export function AuthScreen({ navigation }: AuthScreenProps) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
+  const [error, setError] = useState(false);
   const handleEmailPassword = () => {
-    navigation.navigate("Home");
+    axios
+      .post("http://localhost:3000/login", { email, password })
+      .then((res) => {
+        if (res.status === 200) {
+          setError(false);
+          navigation.navigate("Home");
+          console.log("ok");
+        } else {
+          setError(true);
+          console.log("error");
+        }
+      });
+    console.log(error);
   };
   return (
     <KeyboardAvoidingView
@@ -57,7 +69,11 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-
+        {error ? (
+          <Text style={styles.warningText}>Senha ou usuário incorreto</Text>
+        ) : (
+          <></>
+        )}
         <TouchableOpacity
           onPress={() => {
             handleEmailPassword();
@@ -111,5 +127,10 @@ const styles = StyleSheet.create({
     height: 100,
     width: 100,
     marginBottom: 10,
+  },
+  warningText: {
+    color: "#C8E6C9",
+    fontSize: 15,
+    fontWeight: "bold",
   },
 });
