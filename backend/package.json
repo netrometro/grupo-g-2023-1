@@ -1,7 +1,6 @@
 {
   "name": "grupog",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "engines": {
     "node": "18"
@@ -29,5 +28,6 @@
     "bcrypt": "^5.1.1",
     "fastify": "^4.21.0",
     "zod": "^3.22.1"
-  }
+  },
+  "description": ""
 }
