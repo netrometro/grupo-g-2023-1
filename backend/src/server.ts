@@ -7,14 +7,12 @@ const app: FastifyInstance = fastify({ logger: true });
 
 healthCheckRoutes(app);
 userRoute(app);
-const start = async () => {
-  try {
-    await app.listen(port);
-    console.log(`Server listening on port ${port}`);
-  } catch (e) {
-    console.error(e);
-    process.exit(1);
-  }
-};
 
-start();
+app
+  .listen({
+    port: process.env.PORT ? Number(process.env.PORT) : 3333,
+    host: "0.0.0.0",
+  })
+  .then(() => {
+    console.log("Servidor rodando na porta 3333🚀");
+  });

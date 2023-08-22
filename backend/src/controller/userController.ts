@@ -37,11 +37,12 @@ export default {
         return reply.send({ error: "Usuário não encontrado" });
       }
 
-      const comparePassword = (await password) === user.password;
+      const comparePassword = password === user.password;
 
       if (!comparePassword) {
         return reply.send({ error: "Senha ou usuário incorretos" });
       }
+      return reply.send({ msg: "Logado" });
     } catch (e) {
       console.error(e);
       return reply.send({ error: "Ocorreu um erro ao realizar o login" });
