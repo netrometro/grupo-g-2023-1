@@ -2,7 +2,7 @@
   "name": "grupog",
   "version": "1.0.0",
   "description": "",
-  "main": "server.ts",
+  "main": "index.js",
   "engines": {
     "node": "18"
   },
