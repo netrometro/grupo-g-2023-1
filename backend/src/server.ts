@@ -2,7 +2,6 @@
 import fastify, { FastifyInstance } from "fastify";
 import healthCheckRoutes from "./routes/healthCheckRoute";
 import userRoute from "./routes/userRoute";
-const port = 3000;
 const app: FastifyInstance = fastify({ logger: true });
 
 healthCheckRoutes(app);
