@@ -47,7 +47,7 @@ export default{
         }
     },
 
-    async deletePost(req: FastifyRequest, rep: FastifyReply){
+    async deletePost(req: FastifyRequest, res: FastifyReply){
         try {
             const {userId} = req.params as Quote;
             const {postId} = req.body as Quote;
@@ -57,15 +57,53 @@ export default{
             })
 
             if(!post){
-                return rep.send({error: "Postagem não encontrada."});
+                return res.send({error: "Postagem não encontrada."});
             }
 
             post = await prisma.post.delete({where:{postId, userId: Number(userId)}})
 
-            return rep.send({msg: "Post deletado!"})
+            return res.send({msg: "Post deletado!"})
         } catch (error) {
             console.log(error)
-            return rep.send({ error: "Impossível deletar postagem."})
+            return res.send({ error: "Impossível deletar postagem."})
+        }
+    },
+
+    async showPost(req: FastifyRequest, res: FastifyReply){
+        try {
+            const {userId} = req.params as Quote;
+            const {postId} = req.body as Quote;
+
+            const post = await prisma.post.findUnique({
+                where: {postId: postId, userId: Number(userId)}
+            })
+
+            if(!post){
+                return res.send({error: "Postagem não encontrada."});
+            }
+
+            res.send(post)
+            return res.send({msg: "Aqui está a sua postagem."})
+        } catch (error) {
+            console.log(error)
+            return res.send({error: "Não foi possível visualizar a postagem."})
+        }
+    },
+
+    async showAllPosts(req: FastifyRequest, res: FastifyReply){
+        try {
+
+            const posts = await prisma.post.findMany()
+
+            if(!posts){
+                return res.send({error: "Postagens não encontradas."});
+            }
+
+            res.send(posts)
+            return res.send({msg: "Aqui estão os posts mais novos."})
+        } catch (error) {
+            console.log(error)
+            return res.send({error: "Não foi possível mostrar os posts mais novos."})
         }
     }
 }
