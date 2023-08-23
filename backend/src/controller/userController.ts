@@ -42,7 +42,7 @@ export default {
   async loginUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
       email: z.string().email(),
-      password: z.string().min(6),
+      password: z.string(),
     });
 
     try {
@@ -60,7 +60,7 @@ export default {
         return reply.status(401).send({ error: "Senha ou usuário incorretos" });
       }
 
-      return reply.status(200).send({ msg: "Logado" });
+      return reply.status(200).send({ email, password });
     } catch (e) {
       console.error(e);
       return reply
@@ -93,6 +93,26 @@ export default {
       return reply.send({
         error: "Ocorreu um erro ao procurar todos os usuários",
       });
+    }
+  },
+
+  async deleteUser(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string(),
+    });
+    try {
+      const { email } = userSchema.parse(request.body);
+
+      const user = await prisma.usuario.findUnique({ where: { email } });
+
+      if (!user) {
+        return reply.send({ error: "usuario não encontrado" });
+      }
+
+      await prisma.usuario.delete({ where: { email } });
+      return reply.send({ menssage: "usuario deletado!" });
+    } catch (e) {
+      return reply.send(e);
     }
   },
 };
