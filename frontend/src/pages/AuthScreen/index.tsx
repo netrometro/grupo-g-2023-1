@@ -49,6 +49,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
           setErrorMessage("Conta criada com sucesso");
         } else {
           setError(true);
+          setErrorMessage(res.data.error);
         }
       })
       .catch((error) => {
