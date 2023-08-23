@@ -31,7 +31,7 @@ export default {
       return reply.send({ msg: "Cadastrado" });
     } catch (e) {
       console.log(e);
-      return reply.send({ e });
+      return reply.code(401).send({ e });
     }
   },
 
