@@ -15,4 +15,12 @@ model usuario {
   email      String      @unique
   created_at DateTime    @default(now())
   password   String
+  posts post[]
+}
+
+model post {
+  postId Int @id @default(autoincrement())
+  quote String  @default(" ")
+  usuario   usuario @relation(fields: [userId], references: [userId])
+  userId Int
 }
