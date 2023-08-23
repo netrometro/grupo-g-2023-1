@@ -60,7 +60,7 @@ export default {
         return reply.status(401).send({ error: "Senha ou usuário incorretos" });
       }
 
-      return reply.status(200).send({ msg: "Logado" });
+      return reply.status(200).send({ email, password });
     } catch (e) {
       console.error(e);
       return reply

@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar";
 import { AuthScreenProps } from "../../types/PagesTypeList";
 import { UserCircle } from "phosphor-react-native";
 import { DivisionLine } from "../../components/UI/DivisionLine";
-import { getGlobalEmail } from "../GlobalVariables";
+import { globalEmail } from "../GlobalVariables";
 import { useEffect, useState } from "react";
 import axios from "axios";
 const UserProfile = ({ navigation }: AuthScreenProps) => {
@@ -13,20 +13,19 @@ const UserProfile = ({ navigation }: AuthScreenProps) => {
   const deleteAccount = () => {
     axios
       .post("https://ecoaware-cm57.onrender.com/deleteUser", {
-        email: getGlobalEmail,
+        email: globalEmail,
       })
       .then((res) => {
         if (res.status === 200) {
-          useEffect(() => {
-            const timer = setTimeout(() => {
-              navigation.navigate("AuthScreen");
-            }, 3000);
-
-            return () => clearTimeout(timer);
-          }, []);
+          console.log(res.status);
+          navigation.navigate("AuthScreen");
+          setUserDeleted(true);
         }
       })
-      .catch((error) => {});
+      .catch((error) => {
+        console.log(error.response.data.error);
+        console.log(globalEmail);
+      });
   };
   return (
     <View style={styles.container}>

@@ -30,6 +30,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         if (res.status === 200) {
           navigation.navigate("Home");
           updateGlobalEmail(res.data.email);
+          console.log(res.data);
           setError(false);
         } else {
           setError(true);
