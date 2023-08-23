@@ -1,23 +1,13 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import Navbar from "../../components/Navbar";
-import { AuthScreenProps, LockScreenParamList } from "../../types/PagesTypeList";
-import CategoryCard from "../../components/CategoryCard";
-import { Drop } from "phosphor-react-native";
+import { AuthScreenProps } from "../../types/PagesTypeList";
 
 
 const EcoInfo = ({ navigation }: AuthScreenProps) => {
-
-
-
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>EcoInfo</Text>
-        <CategoryCard navigation={{
-        navigate: function (screen: keyof LockScreenParamList): void {
-          throw new Error("Function not implemented.");
-        }
-      }}/>
+      <Text>EcoInfo</Text>
       <Navbar navigation={navigation} />
     </View>
   );

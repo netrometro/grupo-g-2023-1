@@ -5,7 +5,6 @@ export type LockScreenParamList = {
   Gifts: undefined;
   EcoInfo: undefined;
   EcoDicas: undefined;
-  
 };
 export type AuthScreenProps = {
   navigation: {

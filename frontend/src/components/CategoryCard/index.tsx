@@ -20,7 +20,6 @@ const CategoryCard = ({navigation}: AuthScreenProps) => {
         const response = await api.get(`/getDica`);
 
         setCategory(response.data);
-        console.log(response.data)
       } catch (error) {
         console.error(error);
       }
@@ -40,9 +39,7 @@ const CategoryCard = ({navigation}: AuthScreenProps) => {
           onPress={() => {
             ecoDicasScreen();
           }}
-        ><Text>botao</Text></TouchableOpacity>
-        <Text>tste</Text>
-        
+        />
       </ScrollView>
      <Navbar navigation={navigation} />
     </View>
