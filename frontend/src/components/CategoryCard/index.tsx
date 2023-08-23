@@ -3,13 +3,16 @@ import { ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-nati
 import Navbar from "../Navbar";
 import { AuthScreenProps } from "../../types/PagesTypeList";
 import { api } from '../../services/api';
+import { useNavigation } from '@react-navigation/native';
 
 interface Category {
   categoria: String;
 }
 
-const CategoryCard = ({ navigation }: AuthScreenProps) => {
+const CategoryCard = ({navigation}: AuthScreenProps) => {
   const [category, setCategory] = useState<Category[]>([]);
+
+ 
 
   useEffect(() => {
     const fetchCategory = async () => {
@@ -25,15 +28,20 @@ const CategoryCard = ({ navigation }: AuthScreenProps) => {
     fetchCategory();
   }, []);
 
+  function ecoDicasScreen(){
+    navigation.navigate("EcoDicas")
+  }
+
   return (
     <View style={stylesCategoryCard.container}>
       <ScrollView>
-          <TouchableOpacity
-              onPress={() => navigate('companyDashboard',)}>
-          </TouchableOpacity>
-        </ScrollView>
-      <Navbar navigation={navigation} />
-      
+        <TouchableOpacity
+          onPress={() => {
+            ecoDicasScreen();
+          }}
+        />
+      </ScrollView>
+     <Navbar navigation={navigation} />
     </View>
   );
 };
