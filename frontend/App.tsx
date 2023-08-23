@@ -15,9 +15,7 @@ const Stack = createNativeStackNavigator();
 function App() {
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        screenOptions={{ headerShown: false, animation: "none" }}
-      >
+      <Stack.Navigator screenOptions={{ headerShown: false }}>
         <Stack.Screen name="AuthScreen" component={AuthScreen} />
         <Stack.Screen name="Home" component={Home} />
         <Stack.Screen name="Gifts" component={Gifts} />

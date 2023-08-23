@@ -4,11 +4,13 @@ import healthCheckRoutes from "./routes/healthCheckRoute";
 import userRoute from "./routes/userRoute";
 import dicaRoute from "./routes/dicaRoute";
 
+import postRoutes from "./routes/postRoutes";
 const app: FastifyInstance = fastify({ logger: true });
 
 healthCheckRoutes(app);
 userRoute(app);
 dicaRoute(app)
+postRoutes(app);
 
 app
   .listen({
