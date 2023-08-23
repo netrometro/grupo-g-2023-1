@@ -34,18 +34,20 @@ export default {
       const user = await prisma.usuario.findUnique({ where: { email } });
 
       if (!user) {
-        return reply.send({ error: "Usuário não encontrado" });
+        return reply.code(404).send({ error: "Usuário não encontrado" });
       }
 
       const comparePassword = password === user.password;
 
       if (!comparePassword) {
-        return reply.send({ error: "Senha ou usuário incorretos" });
+        return reply.code(400).send({ error: "Senha ou usuário incorretos" });
       }
       return reply.send({ msg: "Logado" });
     } catch (e) {
       console.error(e);
-      return reply.send({ error: "Ocorreu um erro ao realizar o login" });
+      return reply
+        .code(500)
+        .send({ error: "Ocorreu um erro ao realizar o login" });
     }
   },
 
