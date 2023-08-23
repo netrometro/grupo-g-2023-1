@@ -6,14 +6,15 @@ const prisma = new PrismaClient();
 export default {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
-      email: z.string().email(),
-      password: z.string(),
+      email: z.string().email({ message: "Email inválido" }),
+      password: z
+        .string()
+        .length(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
     });
     try {
       const { email, password } = userSchema.parse(request.body);
 
       let user = await prisma.usuario.findUnique({ where: { email } });
-
       if (user) {
         reply
           .code(401)
