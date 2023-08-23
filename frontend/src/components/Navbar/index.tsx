@@ -30,7 +30,6 @@ function Navbar({ navigation }: AuthScreenProps) {
   return (
     <View style={styles.container}>
       <View style={styles.iconsDivider}>
-        
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("Home");
@@ -42,23 +41,6 @@ function Navbar({ navigation }: AuthScreenProps) {
             weight={isIconFilled("Home")}
           />
         </TouchableOpacity>
-
-        <TouchableOpacity
-          onPress={() => {
-            navigation.navigate("EcoInfo");
-          }}
-        >
-          <GlobeHemisphereWest
-            size={iconSize}
-            color="#5A875D"
-            weight={isIconFilled("EcoInfo")}
-          />
-        </TouchableOpacity>
-
-        <TouchableOpacity onPress={showModal}>
-          <AddModal onHideModal={hideModal} />
-        </TouchableOpacity>
-
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("Gifts");
@@ -70,7 +52,21 @@ function Navbar({ navigation }: AuthScreenProps) {
             weight={isIconFilled("Gifts")}
           />
         </TouchableOpacity>
+        <TouchableOpacity onPress={showModal}>
+          <AddModal onHideModal={hideModal} />
+        </TouchableOpacity>
 
+        <TouchableOpacity
+          onPress={() => {
+            navigation.navigate("EcoRank");
+          }}
+        >
+          <GlobeHemisphereWest
+            size={iconSize}
+            color="#5A875D"
+            weight={isIconFilled("EcoRank")}
+          />
+        </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
             navigation.navigate("UserProfile");

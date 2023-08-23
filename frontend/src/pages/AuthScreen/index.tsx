@@ -8,18 +8,16 @@ import {
   Image,
   Platform,
 } from "react-native";
-import React, { useState, createContext } from "react";
+import React, { useState } from "react";
 import { AuthScreenProps } from "../../types/PagesTypeList";
 import axios from "axios";
 import { Eye, EyeClosed } from "phosphor-react-native";
-import { updateGlobalEmail } from "../GlobalVariables";
 export function AuthScreen({ navigation }: AuthScreenProps) {
   const [email, setEmail] = useState<string>("" as string);
   const [password, setPassword] = useState<string>("" as string);
   const [error, setError] = useState<boolean>(false as boolean);
   const [errorMessage, setErrorMessage] = useState<string>("" as string);
   const [showPassword, setShowPassword] = useState(false);
-
   const handleEmailPassword = () => {
     axios
       .post("https://ecoaware-cm57.onrender.com/login", {
@@ -29,8 +27,6 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
       .then((res) => {
         if (res.status === 200) {
           navigation.navigate("Home");
-          updateGlobalEmail(res.data.email);
-          console.log(res.data);
           setError(false);
         } else {
           setError(true);
@@ -63,6 +59,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         setErrorMessage(error.response.data.error);
       });
   };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
