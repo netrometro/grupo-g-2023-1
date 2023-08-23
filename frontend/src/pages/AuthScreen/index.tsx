@@ -47,8 +47,11 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         if (res.status === 200) {
           setError(true);
           setErrorMessage("Conta criada com sucesso");
+          setEmail("");
+          setPassword("");
         } else {
           setError(true);
+          setErrorMessage(res.data.error);
         }
       })
       .catch((error) => {

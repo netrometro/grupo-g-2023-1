@@ -6,14 +6,15 @@ const prisma = new PrismaClient();
 export default {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
-      email: z.string().email(),
-      password: z.string(),
+      email: z.string().email({ message: "Email inválido" }),
+      password: z
+        .string()
+        .min(6, { message: "Senha deve conter no mínimo 6 caracteres" }),
     });
     try {
       const { email, password } = userSchema.parse(request.body);
 
       let user = await prisma.usuario.findUnique({ where: { email } });
-
       if (user) {
         reply
           .code(401)
@@ -28,9 +29,13 @@ export default {
       }
       reply.send({ email, password });
       return reply.send({ msg: "Cadastrado" });
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
-      return reply.send({ e });
+      if (e.issues && e.issues[0].code === "too_small") {
+        return reply.code(401).send({ error: e.issues[0].message }); // Send the custom error message
+      } else {
+        return reply.code(401).send({ error: "Erro ao realizar o cadastro" });
+      }
     }
   },
 
