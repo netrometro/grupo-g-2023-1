@@ -12,19 +12,21 @@ import React, { useState } from "react";
 import { AuthScreenProps } from "../../types/PagesTypeList";
 import axios from "axios";
 export function AuthScreen({ navigation }: AuthScreenProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [email, setEmail] = useState<string>("" as string);
+  const [password, setPassword] = useState<string>("" as string);
+  const [error, setError] = useState<boolean>(false as boolean);
   const handleEmailPassword = () => {
-    console.log(typeof email, typeof password);
     axios
       .post("https://ecoaware-cm57.onrender.com/login", {
-        params: {
-          email: "pedroluiz@hotmail.com",
-          password: "rockkk2002",
-        },
+        email: email,
+        password: password,
       })
       .then((res) => {
+        if (res.data === "Logado") {
+          navigation.navigate("Home");
+        } else {
+          setError(true);
+        }
         console.log(res.data);
       })
       .catch((error) => {
