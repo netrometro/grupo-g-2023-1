@@ -11,25 +11,55 @@ import {
 import React, { useState } from "react";
 import { AuthScreenProps } from "../../types/PagesTypeList";
 import axios from "axios";
+import { Eye, EyeClosed } from "phosphor-react-native";
 export function AuthScreen({ navigation }: AuthScreenProps) {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
+  const [email, setEmail] = useState<string>("" as string);
+  const [password, setPassword] = useState<string>("" as string);
+  const [error, setError] = useState<boolean>(false as boolean);
+  const [errorMessage, setErrorMessage] = useState<string>("" as string);
+  const [showPassword, setShowPassword] = useState(false);
   const handleEmailPassword = () => {
     axios
-      .post("http://localhost:3000/login", { email, password })
+      .post("https://ecoaware-cm57.onrender.com/login", {
+        email: email,
+        password: password,
+      })
       .then((res) => {
         if (res.status === 200) {
-          setError(false);
           navigation.navigate("Home");
-          console.log("ok");
+          setError(false);
         } else {
           setError(true);
-          console.log("error");
         }
+      })
+      .catch((error) => {
+        setErrorMessage(error.response.data.error);
+        setError(true);
       });
-    console.log(error);
   };
+  const createAccount = () => {
+    axios
+      .post("https://ecoaware-cm57.onrender.com/register", {
+        email: email,
+        password: password,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          setError(true);
+          setErrorMessage("Conta criada com sucesso");
+          setEmail("");
+          setPassword("");
+        } else {
+          setError(true);
+          setErrorMessage(res.data.error);
+        }
+      })
+      .catch((error) => {
+        setError(true);
+        setErrorMessage(error.response.data.error);
+      });
+  };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -51,14 +81,30 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
-        <TextInput
-          placeholder="Senha"
-          placeholderTextColor={"#5A875D"}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry={true}
-        />
+
+        <View style={styles.passwordInput}>
+          <TextInput
+            placeholder="Senha"
+            placeholderTextColor="#5A875D"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            style={styles.passwordInputField}
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.passwordToggleIcon}
+          >
+            {showPassword ? (
+              <Eye size={30} color="#5A875D" />
+            ) : (
+              <EyeClosed size={30} color="#5A875D" />
+            )}
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={styles.errorContainer}>
+        {error ? <Text style={styles.warningText}>{errorMessage}</Text> : <></>}
       </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
@@ -69,14 +115,9 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-        {error ? (
-          <Text style={styles.warningText}>Senha ou usuário incorreto</Text>
-        ) : (
-          <></>
-        )}
         <TouchableOpacity
           onPress={() => {
-            handleEmailPassword();
+            createAccount();
           }}
           style={styles.button}
         >
@@ -105,9 +146,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   inputContainer: {},
-  buttonContainer: {
-    marginVertical: 20,
-  },
+  buttonContainer: {},
   button: {
     height: 50,
     width: 250,
@@ -132,5 +171,27 @@ const styles = StyleSheet.create({
     color: "#C8E6C9",
     fontSize: 15,
     fontWeight: "bold",
+    textAlign: "center",
+  },
+  errorContainer: {
+    alignItems: "center",
+  },
+  passwordInput: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#C8E6C9",
+    height: 60,
+    width: 300,
+    borderRadius: 20,
+    padding: 10,
+    margin: 5,
+  },
+  passwordInputField: {
+    flex: 1,
+    paddingRight: 20,
+  },
+  passwordToggleIcon: {
+    position: "absolute",
+    right: 10,
   },
 });

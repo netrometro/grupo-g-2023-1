@@ -1,16 +1,24 @@
 import { PrismaClient } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { User } from "../interfaces/userInterface";
+import z from "zod";
 const prisma = new PrismaClient();
 export default {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string().email({ message: "Email inválido" }),
+      password: z
+        .string()
+        .min(6, { message: "Senha deve conter no mínimo 6 caracteres" }),
+    });
     try {
-      const { email, password } = request.body as User;
+      const { email, password } = userSchema.parse(request.body);
 
       let user = await prisma.usuario.findUnique({ where: { email } });
-
       if (user) {
-        reply.send({ error: "Já existe um usuário com essas credenciais" });
+        reply
+          .code(401)
+          .send({ error: "Já existe um usuário com essas credenciais" });
       } else {
         await prisma.usuario.create({
           data: {
@@ -21,31 +29,43 @@ export default {
       }
       reply.send({ email, password });
       return reply.send({ msg: "Cadastrado" });
-    } catch (e) {
+    } catch (e: any) {
       console.log(e);
-      return reply.send({ error: "Ocorreu um erro ao cadastrar o usuário" });
+      if (e.issues && e.issues[0].code === "too_small") {
+        return reply.code(401).send({ error: e.issues[0].message }); // Send the custom error message
+      } else {
+        return reply.code(401).send({ error: "Erro ao realizar o cadastro" });
+      }
     }
   },
 
   async loginUser(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string().email(),
+      password: z.string().min(6),
+    });
+
     try {
-      const { email, password } = request.body as User;
+      const { email, password } = userSchema.parse(request.body);
 
       const user = await prisma.usuario.findUnique({ where: { email } });
 
       if (!user) {
-        return reply.send({ error: "Usuário não encontrado" });
+        return reply.status(404).send({ error: "Usuário não encontrado" });
       }
 
       const comparePassword = password === user.password;
 
       if (!comparePassword) {
-        return reply.send({ error: "Senha ou usuário incorretos" });
+        return reply.status(401).send({ error: "Senha ou usuário incorretos" });
       }
-      return reply.send({ msg: "Logado" });
+
+      return reply.status(200).send({ msg: "Logado" });
     } catch (e) {
       console.error(e);
-      return reply.send({ error: "Ocorreu um erro ao realizar o login" });
+      return reply
+        .status(500)
+        .send({ error: "Ocorreu um erro ao realizar o login" });
     }
   },
 
