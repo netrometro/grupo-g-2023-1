@@ -11,11 +11,13 @@ import {
 import React, { useState } from "react";
 import { AuthScreenProps } from "../../types/PagesTypeList";
 import axios from "axios";
+import { Eye, EyeClosed } from "phosphor-react-native";
 export function AuthScreen({ navigation }: AuthScreenProps) {
   const [email, setEmail] = useState<string>("" as string);
   const [password, setPassword] = useState<string>("" as string);
   const [error, setError] = useState<boolean>(false as boolean);
   const [errorMessage, setErrorMessage] = useState<string>("" as string);
+  const [showPassword, setShowPassword] = useState(false);
   const handleEmailPassword = () => {
     axios
       .post("https://ecoaware-cm57.onrender.com/login", {
@@ -43,8 +45,8 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
       })
       .then((res) => {
         if (res.status === 200) {
-          console.log("Conta criada com sucesso");
-          setError(false);
+          setError(true);
+          setErrorMessage("Conta criada com sucesso");
         } else {
           setError(true);
         }
@@ -76,14 +78,27 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
           onChangeText={(text) => setEmail(text)}
           style={styles.input}
         />
-        <TextInput
-          placeholder="Senha"
-          placeholderTextColor={"#5A875D"}
-          value={password}
-          onChangeText={(text) => setPassword(text)}
-          style={styles.input}
-          secureTextEntry={true}
-        />
+
+        <View style={styles.passwordInput}>
+          <TextInput
+            placeholder="Senha"
+            placeholderTextColor="#5A875D"
+            value={password}
+            onChangeText={(text) => setPassword(text)}
+            style={styles.passwordInputField}
+            secureTextEntry={!showPassword}
+          />
+          <TouchableOpacity
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.passwordToggleIcon}
+          >
+            {showPassword ? (
+              <Eye size={30} color="#5A875D" />
+            ) : (
+              <EyeClosed size={30} color="#5A875D" />
+            )}
+          </TouchableOpacity>
+        </View>
       </View>
       <View style={styles.errorContainer}>
         {error ? <Text style={styles.warningText}>{errorMessage}</Text> : <></>}
@@ -157,5 +172,23 @@ const styles = StyleSheet.create({
   },
   errorContainer: {
     alignItems: "center",
+  },
+  passwordInput: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#C8E6C9",
+    height: 60,
+    width: 300,
+    borderRadius: 20,
+    padding: 10,
+    margin: 5,
+  },
+  passwordInputField: {
+    flex: 1,
+    paddingRight: 20,
+  },
+  passwordToggleIcon: {
+    position: "absolute",
+    right: 10,
   },
 });
