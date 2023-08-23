@@ -9,7 +9,7 @@ export default {
       email: z.string().email({ message: "Email inválido" }),
       password: z
         .string()
-        .length(6, { message: "A senha deve ter no mínimo 6 caracteres" }),
+        .min(6, { message: "Senha deve conter no mínimo 6 caracteres" }),
     });
     try {
       const { email, password } = userSchema.parse(request.body);
