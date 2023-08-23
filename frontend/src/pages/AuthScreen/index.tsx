@@ -24,13 +24,33 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
       .then((res) => {
         if (res.status === 200) {
           navigation.navigate("Home");
+          setError(false);
         } else {
           setError(true);
         }
-        console.log(res.data);
       })
       .catch((error) => {
-        return error;
+        setError(true);
+        console.log(error);
+      });
+  };
+  const createAccount = () => {
+    axios
+      .post("https://ecoaware-cm57.onrender.com/register", {
+        email: email,
+        password: password,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log("Conta criada com sucesso");
+          setError(false);
+        } else {
+          setError(true);
+        }
+      })
+      .catch((error) => {
+        setError(true);
+        console.log(error);
       });
   };
 
@@ -80,7 +100,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         )}
         <TouchableOpacity
           onPress={() => {
-            handleEmailPassword();
+            createAccount();
           }}
           style={styles.button}
         >
