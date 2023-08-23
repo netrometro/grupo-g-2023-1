@@ -95,4 +95,24 @@ export default {
       });
     }
   },
+
+  async deleteUser(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string(),
+    });
+    try {
+      const { email } = userSchema.parse(request.body);
+
+      const user = await prisma.usuario.findUnique({ where: { email } });
+
+      if (!user) {
+        return reply.send({ error: "usuario não encontrado" });
+      }
+
+      await prisma.usuario.delete({ where: { email } });
+      return reply.send({ menssage: "usuario deletado!" });
+    } catch (e) {
+      return reply.send(e);
+    }
+  },
 };
