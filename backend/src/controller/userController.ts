@@ -7,7 +7,7 @@ export default {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
       email: z.string().email(),
-      password: z.string().min(6),
+      password: z.string(),
     });
     try {
       const { email, password } = userSchema.parse(request.body);
