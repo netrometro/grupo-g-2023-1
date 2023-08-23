@@ -18,6 +18,7 @@ const UserProfile = ({ navigation }: AuthScreenProps) => {
       .then((res) => {
         if (res.status === 200) {
           console.log(res.status);
+          console.log(globalEmail);
           navigation.navigate("AuthScreen");
           setUserDeleted(true);
         }
