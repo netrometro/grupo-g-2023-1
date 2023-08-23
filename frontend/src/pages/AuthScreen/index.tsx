@@ -19,17 +19,20 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
     axios
       .post("http://localhost:3000/login", { email, password })
       .then((res) => {
+        console.log(res);
         if (res.status === 200) {
           setError(false);
           navigation.navigate("Home");
-          console.log("ok");
         } else {
           setError(true);
-          console.log("error");
         }
+      })
+      .catch((error) => {
+        setError(true);
+        console.error("Request failed:", error);
       });
-    console.log(error);
   };
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
