@@ -1,11 +1,16 @@
 import { PrismaClient } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { User } from "../interfaces/userInterface";
+import z from "zod";
 const prisma = new PrismaClient();
 export default {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string().email(),
+      password: z.string().min(6),
+    });
     try {
-      const { email, password } = request.body as User;
+      const { email, password } = userSchema.parse(request.body);
 
       let user = await prisma.usuario.findUnique({ where: { email } });
 
@@ -28,26 +33,28 @@ export default {
   },
 
   async loginUser(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string().email(),
+      password: z.string().min(6),
+    });
     try {
-      const { email, password } = request.body as User;
+      const { email, password } = userSchema.parse(request.body);
 
       const user = await prisma.usuario.findUnique({ where: { email } });
 
       if (!user) {
-        return reply.code(404).send({ error: "Usuário não encontrado" });
+        return reply.send({ error: "Usuário não encontrado" });
       }
 
       const comparePassword = password === user.password;
 
       if (!comparePassword) {
-        return reply.code(400).send({ error: "Senha ou usuário incorretos" });
+        return reply.send({ error: "Senha ou usuário incorretos" });
       }
       return reply.send({ msg: "Logado" });
     } catch (e) {
       console.error(e);
-      return reply
-        .code(500)
-        .send({ error: "Ocorreu um erro ao realizar o login" });
+      return reply.send({ error: "Ocorreu um erro ao realizar o login" });
     }
   },
 

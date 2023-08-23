@@ -16,19 +16,18 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(false);
   const handleEmailPassword = () => {
+    console.log(typeof email, typeof password);
     axios
-      .post("https://ecoaware-cm57.onrender.com/login", { email, password })
+      .post("https://ecoaware-cm57.onrender.com/login", {
+        params: {
+          email: "pedroluiz@hotmail.com",
+          password: "rockkk2002",
+        },
+      })
       .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          setError(false);
-          navigation.navigate("Home");
-        } else {
-          setError(true);
-        }
+        console.log(res.data);
       })
       .catch((error) => {
-        setError(true);
         console.error("Request failed:", error);
       });
   };
