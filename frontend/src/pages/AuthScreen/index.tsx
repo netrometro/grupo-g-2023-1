@@ -15,6 +15,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
   const [email, setEmail] = useState<string>("" as string);
   const [password, setPassword] = useState<string>("" as string);
   const [error, setError] = useState<boolean>(false as boolean);
+  const [errorMessage, setErrorMessage] = useState<string>("" as string);
   const handleEmailPassword = () => {
     axios
       .post("https://ecoaware-cm57.onrender.com/login", {
@@ -30,8 +31,8 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         }
       })
       .catch((error) => {
+        setErrorMessage(error.response.data.error);
         setError(true);
-        console.log(error);
       });
   };
   const createAccount = () => {
@@ -50,7 +51,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
       })
       .catch((error) => {
         setError(true);
-        console.log(error);
+        console.log(error.response.data.error);
       });
   };
 
@@ -93,11 +94,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-        {error ? (
-          <Text style={styles.warningText}>Senha ou usuário incorreto</Text>
-        ) : (
-          <></>
-        )}
+        {error ? <Text style={styles.warningText}>{errorMessage}</Text> : <></>}
         <TouchableOpacity
           onPress={() => {
             createAccount();
@@ -156,5 +153,6 @@ const styles = StyleSheet.create({
     color: "#C8E6C9",
     fontSize: 15,
     fontWeight: "bold",
+    textAlign: "center",
   },
 });

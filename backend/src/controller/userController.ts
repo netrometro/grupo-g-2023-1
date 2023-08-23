@@ -15,7 +15,9 @@ export default {
       let user = await prisma.usuario.findUnique({ where: { email } });
 
       if (user) {
-        reply.send({ error: "Já existe um usuário com essas credenciais" });
+        reply
+          .code(401)
+          .send({ error: "Já existe um usuário com essas credenciais" });
       } else {
         await prisma.usuario.create({
           data: {
