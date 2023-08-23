@@ -51,7 +51,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
       })
       .catch((error) => {
         setError(true);
-        console.log(error.response.data.error);
+        setErrorMessage(error.response.data.error);
       });
   };
 
@@ -85,6 +85,9 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
           secureTextEntry={true}
         />
       </View>
+      <View style={styles.errorContainer}>
+        {error ? <Text style={styles.warningText}>{errorMessage}</Text> : <></>}
+      </View>
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={() => {
@@ -94,7 +97,6 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         >
           <Text style={styles.buttonText}>Login</Text>
         </TouchableOpacity>
-        {error ? <Text style={styles.warningText}>{errorMessage}</Text> : <></>}
         <TouchableOpacity
           onPress={() => {
             createAccount();
@@ -126,9 +128,7 @@ const styles = StyleSheet.create({
     margin: 5,
   },
   inputContainer: {},
-  buttonContainer: {
-    marginVertical: 20,
-  },
+  buttonContainer: {},
   button: {
     height: 50,
     width: 250,
@@ -154,5 +154,8 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "bold",
     textAlign: "center",
+  },
+  errorContainer: {
+    alignItems: "center",
   },
 });
