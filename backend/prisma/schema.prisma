@@ -11,8 +11,23 @@ datasource db {
 }
 
 model usuario {
-  userId     Int         @id @default(autoincrement())
-  email      String      @unique
-  created_at DateTime    @default(now())
-  password   String
+  userId       Int         @id @default(autoincrement())
+  email        String      @unique
+  created_at   DateTime    @default(now())
+  password     String
+}
+
+model EcoDica {
+  id           Int      @id @default(autoincrement())
+  categoria    String
+  infocards    InfoCard[]
+
+}
+
+model InfoCard {
+  id           Int      @id @default(autoincrement())
+  titulo       String
+  texto        String
+  ecodicaId    Int
+  ecodicas     EcoDica  @relation(fields: [ecodicaId], references: [id])
 }
