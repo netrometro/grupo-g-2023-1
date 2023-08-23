@@ -22,7 +22,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         password: password,
       })
       .then((res) => {
-        if (res.data === "Logado") {
+        if (res.status === 200) {
           navigation.navigate("Home");
         } else {
           setError(true);
@@ -30,7 +30,7 @@ export function AuthScreen({ navigation }: AuthScreenProps) {
         console.log(res.data);
       })
       .catch((error) => {
-        console.error("Request failed:", error);
+        return error;
       });
   };
 

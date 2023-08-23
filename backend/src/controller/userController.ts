@@ -44,7 +44,7 @@ export default {
       const user = await prisma.usuario.findUnique({ where: { email } });
 
       if (!user) {
-        return reply.status(401).send({ error: "Usuário não encontrado" });
+        return reply.status(404).send({ error: "Usuário não encontrado" });
       }
 
       const comparePassword = password === user.password;
