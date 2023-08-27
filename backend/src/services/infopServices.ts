@@ -1,14 +1,14 @@
 import { infopSchema } from "../Schema/infopSchema";
 import { prisma } from "../prisma/prismaClient";
 
-export async function createinfop(input: infopSchema) {
+export async function createInfop(input: infopSchema) {
     const infop = await prisma.infoPost.create({
             data: input,
         });    
     return infop;
 };
 
-export async function listinfop(input: Number){
+export async function listInfop(input: Number){
     
     const infop = await prisma.infoPost.findFirst({
         where: {infopostId: Number(input)}
@@ -20,13 +20,13 @@ export async function listinfop(input: Number){
     return infop;
 };
 
-export async function listinfops(){
+export async function listInfops(){
 
     const infop = await prisma.infoPost.findMany();
     return infop;
 };
 
-export async function updateinfop(infoPostId: Number, body: infopSchema){
+export async function updateInfop(infoPostId: Number, body: infopSchema){
     const infop = await prisma.infoPost.findFirst({
         where: {infopostId: Number(infoPostId)},
     });
@@ -48,7 +48,7 @@ export async function updateinfop(infoPostId: Number, body: infopSchema){
 
 };
 
-export async function deleteinfop(input: Number){
+export async function deleteInfop(input: Number){
     const infopostId = input;
     const infop = await prisma.infoPost.findFirst({
         where: {

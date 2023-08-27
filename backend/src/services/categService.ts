@@ -8,7 +8,7 @@ export async function createCateg(input: categSchema) {
     return categ;
 };
 
-export async function listcateg(input: Number){
+export async function listCateg(input: Number){
     
     const categ = await prisma.categoryPost.findFirst({
         where: {categorypostId: Number(input)}
@@ -20,13 +20,13 @@ export async function listcateg(input: Number){
     return categ;
 };
 
-export async function listcategs(){
+export async function listCategs(){
 
     const categ = await prisma.categoryPost.findMany();
     return categ;
 };
 
-export async function updatecateg(categorypostId: Number, body: categSchema){
+export async function updateCateg(categorypostId: Number, body: categSchema){
     const categ = await prisma.categoryPost.findFirst({
         where: {categorypostId: Number(categorypostId)},
     });
@@ -47,7 +47,7 @@ export async function updatecateg(categorypostId: Number, body: categSchema){
 
 };
 
-export async function deletecateg(input: Number){
+export async function deleteCateg(input: Number){
     const categorypostId = input;
     const categ = await prisma.categoryPost.findFirst({
         where: {
