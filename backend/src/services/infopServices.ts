@@ -48,3 +48,20 @@ export async function updateinfop(infoPostId: Number, body: infopSchema){
 
 };
 
+export async function deleteinfop(input: Number){
+    const infopostId = input;
+    const infop = await prisma.infoPost.findFirst({
+        where: {
+            infopostId: Number(infopostId)
+        },
+    })
+    if (!infop){
+        throw new Error('InfoPost not found')            
+    }
+    const deleteinfop = await prisma.infoPost.delete({
+        where: infop
+    });
+
+    return deleteinfop;
+
+}
