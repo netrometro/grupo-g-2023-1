@@ -46,3 +46,21 @@ export async function updatecateg(categorypostId: Number, body: categSchema){
     });
 
 };
+
+export async function deletecateg(input: Number){
+    const categorypostId = input;
+    const categ = await prisma.categoryPost.findFirst({
+        where: {
+            categorypostId: Number(categorypostId)
+        },
+    })
+    if (!categ){
+        throw new Error('category not found')            
+    }
+    const deletecateg = await prisma.categoryPost.delete({
+        where: categ
+    });
+
+    return deletecateg;
+
+}
