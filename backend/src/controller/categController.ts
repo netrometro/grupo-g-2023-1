@@ -62,3 +62,25 @@ export async function findCategs(
     
 };
 
+export async function upgradeCateg(
+    request: FastifyRequest<{Body:categSchema}>, 
+    reply: FastifyReply) {
+    
+    const id = Object(request.params);
+    
+    const body = request.body;
+    
+    try{
+        const categ = await updateCateg(id.id, body);
+
+        return reply
+        .status(200)
+        .send({ message: "Categoria atualizada com sucesso!"});
+    } catch(error){
+        return reply
+        .status(500)
+        .send({ message: "Erro interno do servidor"});
+    }
+    
+};
+
