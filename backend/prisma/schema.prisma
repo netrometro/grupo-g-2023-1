@@ -24,3 +24,18 @@ model post {
   usuario   usuario @relation(fields: [userId], references: [userId])
   userId Int
 }
+
+model CategoryPost {
+  categorypostId    Int           @id @default(autoincrement())
+  nome              String
+  infoposts         InfoPost[]
+}
+
+model InfoPost {
+  infopostId        Int           @id @default(autoincrement())
+  titulo            String
+  texto             String
+  created_at        DateTime      @default(now())
+  categorias        CategoryPost  @relation(fields: [categorypostId], references: [categorypostId])
+  categorypostId    Int 
+}
