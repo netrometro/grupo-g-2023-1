@@ -1,7 +1,7 @@
 -- CreateTable
 CREATE TABLE "CategoryPost" (
     "categorypostId" SERIAL NOT NULL,
-    "nome" TEXT NOT NULL,
+    "name" TEXT NOT NULL,
 
     CONSTRAINT "CategoryPost_pkey" PRIMARY KEY ("categorypostId")
 );
@@ -9,8 +9,8 @@ CREATE TABLE "CategoryPost" (
 -- CreateTable
 CREATE TABLE "InfoPost" (
     "infopostId" SERIAL NOT NULL,
-    "titulo" TEXT NOT NULL,
-    "texto" TEXT NOT NULL,
+    "title" TEXT NOT NULL,
+    "text" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "categorypostId" INTEGER NOT NULL,
 
