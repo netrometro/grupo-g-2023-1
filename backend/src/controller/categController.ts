@@ -28,3 +28,37 @@ export async function registerCateg (
     }
 };
 
+export async function findCateg(
+    request: FastifyRequest, 
+    reply: FastifyReply) {
+    
+    const id = Object(request.params);
+    
+    try{
+        const categ = await listCateg(id.id);
+        
+        return reply.status(200).send(categ);
+    } catch(error){
+        return reply
+        .status(500)
+        .send({ message: "Erro interno do servidor"})
+    }
+    
+};
+
+export async function findCategs(
+    request: FastifyRequest, 
+    reply: FastifyReply) {
+    
+    try{
+        const categ = await listCategs();
+        
+        return reply.status(200).send(categ);
+    } catch(error){
+        return reply
+        .status(500)
+        .send({ message: "Erro interno do servidor"});
+    }
+    
+};
+
