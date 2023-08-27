@@ -26,3 +26,25 @@ export async function listinfops(){
     return infop;
 };
 
+export async function updateinfop(infoPostId: Number, body: infopSchema){
+    const infop = await prisma.infoPost.findFirst({
+        where: {infopostId: Number(infoPostId)},
+    });
+    if(!infop){
+        throw new Error("InfoPost not found");
+    }
+
+    const { title, text } = body;
+
+    const update = await prisma.infoPost.update({
+        where:{
+            infopostId: Number(infoPostId)  
+        },
+        data:{
+            title: title,
+            text: text,
+        },
+    });
+
+};
+
