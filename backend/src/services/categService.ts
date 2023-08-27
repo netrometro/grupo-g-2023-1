@@ -8,3 +8,21 @@ export async function createCateg(input: categSchema) {
     return categ;
 };
 
+export async function listcateg(input: Number){
+    
+    const categ = await prisma.categoryPost.findFirst({
+        where: {categorypostId: Number(input)}
+    })
+    if (!categ){
+        throw new Error("category not found")
+    }
+
+    return categ;
+};
+
+export async function listcategs(){
+
+    const categ = await prisma.categoryPost.findMany();
+    return categ;
+};
+
