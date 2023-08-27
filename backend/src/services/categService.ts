@@ -26,3 +26,23 @@ export async function listcategs(){
     return categ;
 };
 
+export async function updatecateg(categorypostId: Number, body: categSchema){
+    const categ = await prisma.categoryPost.findFirst({
+        where: {categorypostId: Number(categorypostId)},
+    });
+    if(!categ){
+        throw new Error("category not found");
+    }
+
+    const { name } = body;
+
+    const update = await prisma.categoryPost.update({
+        where:{
+            categorypostId: Number(categorypostId)  
+        },
+        data:{
+            name: name,
+        },
+    });
+
+};
