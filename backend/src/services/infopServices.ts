@@ -8,3 +8,21 @@ export async function createinfop(input: infopSchema) {
     return infop;
 };
 
+export async function listinfop(input: Number){
+    
+    const infop = await prisma.infoPost.findFirst({
+        where: {infopostId: Number(input)}
+    })
+    if (!infop){
+        throw new Error("InfoPost not found")
+    }
+
+    return infop;
+};
+
+export async function listinfops(){
+
+    const infop = await prisma.infoPost.findMany();
+    return infop;
+};
+
