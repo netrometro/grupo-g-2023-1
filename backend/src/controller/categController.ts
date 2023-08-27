@@ -84,3 +84,21 @@ export async function upgradeCateg(
     
 };
 
+export async function removeCateg(
+    request: FastifyRequest, 
+    reply: FastifyReply){
+    
+    const id = Object(request.params);
+    
+    try {
+        const categ = await deleteCateg(id.id);
+       
+        return reply
+        .status(204)
+        .send({ message: "Categoria deletada com sucesso!"});
+    } catch (error) {
+        return reply
+        .status(500)
+        .send({ message: "Erro interno do servidor"});
+    }
+};
