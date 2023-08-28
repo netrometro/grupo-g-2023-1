@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "post" ADD COLUMN     "co2Emitted" DOUBLE PRECISION NOT NULL DEFAULT 0;
