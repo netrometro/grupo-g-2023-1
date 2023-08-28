@@ -3,11 +3,13 @@ import fastify, { FastifyInstance } from "fastify";
 import healthCheckRoutes from "./routes/healthCheckRoute";
 import userRoute from "./routes/userRoute";
 import postRoutes from "./routes/postRoutes";
+import categRoutes from "./routes/categRoutes";
 const app: FastifyInstance = fastify({ logger: true });
 
 healthCheckRoutes(app);
 userRoute(app);
 postRoutes(app);
+categRoutes(app);
 
 app
   .listen({
