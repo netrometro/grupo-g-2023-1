@@ -4,6 +4,7 @@ CREATE TABLE "usuario" (
     "email" TEXT NOT NULL,
     "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "password" TEXT NOT NULL,
+    "co2Produced" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "usuario_pkey" PRIMARY KEY ("userId")
 );
@@ -13,7 +14,6 @@ CREATE TABLE "post" (
     "postId" SERIAL NOT NULL,
     "quote" TEXT NOT NULL DEFAULT ' ',
     "userId" INTEGER NOT NULL,
-    "co2" INTEGER NOT NULL DEFAULT 0,
 
     CONSTRAINT "post_pkey" PRIMARY KEY ("postId")
 );
