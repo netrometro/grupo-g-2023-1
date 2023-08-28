@@ -10,6 +10,9 @@ import axios from "axios";
 const UserProfile = ({ navigation }: AuthScreenProps) => {
   const iconSize = 150;
   const [userDeleted, setUserDeleted] = useState(false);
+  const handleLogout = () => {
+    navigation.navigate("AuthScreen");
+  };
   const deleteAccount = () => {
     axios
       .post("https://ecoaware-cm57.onrender.com/deleteUser", {
@@ -47,6 +50,9 @@ const UserProfile = ({ navigation }: AuthScreenProps) => {
       <View style={styles.centerView}>
         <TouchableOpacity style={styles.deleteButton} onPress={deleteAccount}>
           <Text style={styles.infoText}>Deletar Usuario</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.deleteButton} onPress={handleLogout}>
+          <Text style={styles.infoText}>Sair </Text>
         </TouchableOpacity>
         {userDeleted ? (
           <Text style={styles.infoText}>Usuario deletado com sucesso</Text>
@@ -101,5 +107,6 @@ const styles = StyleSheet.create({
     backgroundColor: "red",
     padding: 10,
     borderRadius: 15,
+    marginTop: 10,
   },
 });
