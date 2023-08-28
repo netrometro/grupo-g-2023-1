@@ -62,7 +62,7 @@ export async function showAllInfops(
     
 };
 
-export async function editinfop(
+export async function editInfop(
     request: FastifyRequest<{Body:infopSchema}>, 
     reply: FastifyReply) {
     
