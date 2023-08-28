@@ -19,7 +19,6 @@ export async function registerCateg (
 
         return reply
         .status(201)
-        .send(categ)
         .send({message: "Categoria criada com sucesso!"});
     } catch(error) {
         return reply
@@ -28,7 +27,7 @@ export async function registerCateg (
     }
 };
 
-export async function findCateg(
+export async function getCateg(
     request: FastifyRequest, 
     reply: FastifyReply) {
     
@@ -46,7 +45,7 @@ export async function findCateg(
     
 };
 
-export async function findCategs(
+export async function showAllCategs(
     request: FastifyRequest, 
     reply: FastifyReply) {
     
@@ -62,7 +61,7 @@ export async function findCategs(
     
 };
 
-export async function upgradeCateg(
+export async function editCateg(
     request: FastifyRequest<{Body:categSchema}>, 
     reply: FastifyReply) {
     
