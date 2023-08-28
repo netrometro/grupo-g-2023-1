@@ -131,7 +131,7 @@ export default {
       });
       return reply.send(updatedUser);
     } catch (e) {
-      console.log(e);
+      return reply.send({ e });
     }
   },
   async getAllUsersByOrderOfCo2(request: FastifyRequest, reply: FastifyReply) {
@@ -143,7 +143,7 @@ export default {
       });
       return reply.send(usersByOrder);
     } catch (e) {
-      console.log(e);
+      return reply.send({ e });
     }
   },
 };

@@ -4,6 +4,8 @@ import CheckBox from "expo-checkbox";
 import React from "react";
 import { Textbox } from "phosphor-react-native";
 import { TouchableOpacity } from "react-native";
+import { globalEmail } from "../GlobalVariables";
+import axios from "axios";
 interface carFueldObjectInterface {
   [key: string]: number;
 }
@@ -19,6 +21,17 @@ const Calculator = () => {
   const [publicTransportKm, setPublicTransportKm] = React.useState<number>(0);
   const [userDiet, setUserDiet] = React.useState<string>("");
   const [cellphoneHours, setCellphoneHours] = React.useState<number>(0);
+  const [showResult, setShowResult] = React.useState<boolean>(false);
+  const updateCo2 = () => {
+    try {
+      axios.post("http://localhost/updateCo2", {
+        email: globalEmail,
+        co2: calculateResult(),
+      });
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const carFuelObject: carFueldObjectInterface = {
     gasolina: 2.3,
     diesel: 2.7,
@@ -54,14 +67,10 @@ const Calculator = () => {
   const co2SavedFromDiet: number = handleDietDiff() || 0;
 
   const calculateResult = () => {
-    console.log(
-      "CO2 emitido" + co2FromEletricity + co2FromCar + co2FromCellphone
-    );
+    return co2FromEletricity + co2FromCar + co2FromCellphone;
   };
   const calculateSavedCo2 = () => {
-    console.log(
-      "CO2 deixado de emitir" + co2SavedFromPublicTransport + co2SavedFromDiet
-    );
+    return co2SavedFromPublicTransport + co2SavedFromDiet;
   };
   return (
     <ScrollView style={styles.container}>
@@ -88,7 +97,7 @@ const Calculator = () => {
             {eletricityAmount.toFixed()} kWh/Mês
           </Text>
           <Text style={styles.valueText}>
-            {consumption(eletricityAmount, 0.23).toFixed()}kgCO2/Mês
+            {consumption(eletricityAmount, 0.23).toFixed(2)}kgCO2/Mês
           </Text>
         </View>
         <View style={styles.sliderContainer}>
@@ -99,7 +108,10 @@ const Calculator = () => {
               <CheckBox
                 disabled={false}
                 value={!hasCar}
-                onValueChange={() => setHasCar(false)}
+                onValueChange={() => {
+                  setHasCar(false);
+                  setCarKm(0);
+                }}
                 style={{ borderColor: "#C8E6C9", marginTop: 10 }}
               />
             </View>
@@ -171,7 +183,7 @@ const Calculator = () => {
                 onSlidingComplete={(value) => setCarKm(value)}
                 value={carKm}
               />
-              {<Text style={styles.valueText}>{carKm.toFixed()} km/Mês</Text>}
+              {<Text style={styles.valueText}>{carKm.toFixed(2)} km/Mês</Text>}
             </View>
             <View style={styles.sliderContainer}>
               <Text style={styles.questionText}>
@@ -286,18 +298,38 @@ const Calculator = () => {
             {cellphoneHours.toFixed()} horas/dia
           </Text>
           <Text style={styles.valueText}>
-            {((cellphoneHours * 5 * 30) / 1000).toFixed()} kg de CO2/Mês
+            {((cellphoneHours * 5 * 30) / 1000).toFixed(2)} kg de CO2/Mês
           </Text>
         </View>
         <TouchableOpacity
           style={styles.calculatorBtn}
           onPress={() => {
-            calculateResult();
-            calculateSavedCo2();
+            updateCo2();
+            setShowResult(true);
+            const timerId = setTimeout(() => {
+              console.log("Timer executed after 2 seconds");
+            }, 5000);
+            setShowResult(false);
+            clearTimeout(timerId);
           }}
         >
           <Text style={styles.infoText}>Calcular resultado</Text>
         </TouchableOpacity>
+        {showResult && (
+          <>
+            <View style={styles.resultContainer}>
+              <Text style={styles.questionText}>
+                Você produziu {calculateResult().toFixed(2)} kgCO2 nesse mês
+              </Text>
+            </View>
+            <View style={styles.resultContainer}>
+              <Text style={styles.questionText}>
+                {calculateSavedCo2().toFixed(2)} kg de CO2 foram evitados nesse
+                mês
+              </Text>
+            </View>
+          </>
+        )}
       </View>
     </ScrollView>
   );
@@ -376,6 +408,16 @@ const styles = StyleSheet.create({
     borderRadius: 999,
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 30,
+  },
+  resultContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#5A875D",
+    width: "85%",
+    borderRadius: 15,
+    padding: 15,
     marginBottom: 30,
   },
 });
