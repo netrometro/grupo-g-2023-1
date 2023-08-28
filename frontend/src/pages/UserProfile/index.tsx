@@ -38,7 +38,7 @@ const UserProfile = ({ navigation }: AuthScreenProps) => {
       </View>
       <DivisionLine />
       <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>Nome:</Text>
+        <Text style={styles.infoText}>Email: {globalEmail}</Text>
         <Text style={styles.infoText}>idade:</Text>
         <Text style={styles.infoText}>Senha:</Text>
         <Text style={styles.infoText}>Comida favorita:</Text>
