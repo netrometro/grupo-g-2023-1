@@ -3,6 +3,10 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { User } from "../interfaces/userInterface";
 import z from "zod";
 const prisma = new PrismaClient();
+interface RequestBody {
+  email: string;
+  co2Emit: number;
+}
 export default {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
@@ -116,19 +120,15 @@ export default {
     }
   },
   async updateUserCO2Emit(request: FastifyRequest, reply: FastifyReply) {
-    const userSchema = z.object({
-      email: z.string(),
-      co2Emit: z.number(),
-    });
+    const { email, co2Emit } = request.body as any;
     try {
-      const { email, co2Emit } = userSchema.parse(request.body);
-
       const user = await prisma.usuario.findUnique({ where: { email } });
 
       const updatedUser = await prisma.usuario.update({
         where: { email },
         data: { co2Produced: co2Emit },
       });
+      console.log(request.body);
       return reply.send(updatedUser);
     } catch (e) {
       return reply.send({ e });

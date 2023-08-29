@@ -15,7 +15,7 @@ model usuario {
   email      String      @unique
   created_at DateTime    @default(now())
   password   String
-  co2Produced Int @default(0)
+  co2Produced Float @default(0)
   posts post[]
 }
 

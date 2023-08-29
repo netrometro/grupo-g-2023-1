@@ -12,6 +12,9 @@ interface carFueldObjectInterface {
 interface userDietInterface {
   [key: string]: number;
 }
+interface RequestBody {
+  email: string;
+}
 const Calculator = () => {
   const [eletricityAmount, setEletricityAmount] = React.useState(150);
   const [hasCar, setHasCar] = React.useState(false);
@@ -22,16 +25,7 @@ const Calculator = () => {
   const [userDiet, setUserDiet] = React.useState<string>("");
   const [cellphoneHours, setCellphoneHours] = React.useState<number>(0);
   const [showResult, setShowResult] = React.useState<boolean>(false);
-  const updateCo2 = () => {
-    try {
-      axios.post("http://localhost/updateCo2", {
-        email: globalEmail,
-        co2: calculateResult(),
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   const carFuelObject: carFueldObjectInterface = {
     gasolina: 2.3,
     diesel: 2.7,
@@ -59,7 +53,6 @@ const Calculator = () => {
   };
   const carFuelConsumption = carFuelObject[carFuel];
   const userDietValue = userDietObj[userDiet];
-
   const co2FromEletricity = consumption(eletricityAmount, 0.23);
   const co2FromCar = Number(fuelConsuption(carKm, carEfficiency));
   const co2SavedFromPublicTransport = publicTransportKm * 0.67;
@@ -71,6 +64,26 @@ const Calculator = () => {
   };
   const calculateSavedCo2 = () => {
     return co2SavedFromPublicTransport + co2SavedFromDiet;
+  };
+  const co2Value: number = calculateResult();
+
+  const requestData = {
+    email: globalEmail,
+    co2: 2,
+  };
+  const updateCo2 = () => {
+    axios
+      .put("https://ecoaware-cm57.onrender.com/updateUserCo2", {
+        email: "email@gmail",
+        co2: 10,
+      } as RequestBody)
+      .then((response) => {
+        console.log("Response status:", response.status);
+        console.log("Response data:", response.data);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
   };
   return (
     <ScrollView style={styles.container}>
@@ -309,7 +322,7 @@ const Calculator = () => {
             const timerId = setTimeout(() => {
               console.log("Timer executed after 2 seconds");
             }, 5000);
-            setShowResult(false);
+
             clearTimeout(timerId);
           }}
         >
