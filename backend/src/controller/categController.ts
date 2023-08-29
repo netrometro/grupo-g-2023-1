@@ -23,6 +23,7 @@ export async function createCateg (
         .send({ error: "Não foi possível realizar a categagem" });
     }
 }
+
 export async function getCateg (
     request: FastifyRequest, 
     reply: FastifyReply){
@@ -57,7 +58,7 @@ export async function getAllCategs(
     } catch (error) {
         return reply
         .status(500)
-        .send({ message: "Ocorreu um erro ao procurar todos as categorias",
+        .send({ message: "Erro em listar todas as categorias",
         });
     }};
 
@@ -87,7 +88,7 @@ export async function updateCateg (
 
         return reply
         .status(200)
-        .send({ message: "Categoria atualizada com sucesso!"})
+        .send(categ)
     } catch (error) {
         return reply
         .status(500)
@@ -120,7 +121,8 @@ export async function deleteCateg(
                 categorypostId: Number(categorypostId)}})
 
         return reply
-        .status(203)
+        .status(204)
+        .send(categ)
         .send({message: "Categoria deletada com sucesso!"})
     } catch (error) {
         return reply
