@@ -2,7 +2,6 @@ import { ScrollView, StyleSheet, Text, View, Alert } from "react-native";
 import Slider from "@react-native-community/slider";
 import CheckBox from "expo-checkbox";
 import React from "react";
-import { Textbox } from "phosphor-react-native";
 import { TouchableOpacity } from "react-native";
 import { globalEmail } from "../GlobalVariables";
 import axios from "axios";
@@ -78,10 +77,7 @@ const Calculator = ({ navigation }: AuthScreenProps) => {
         email: globalEmail,
         co2Emit: co2Value,
       } as RequestBody)
-      .then((response) => {
-        console.log("Response status:", response.status);
-        console.log("Response data:", response.data);
-      })
+      .then((response) => {})
       .catch((error) => {
         console.log("Error:", error);
       });

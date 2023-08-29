@@ -39,9 +39,9 @@ const EcoRank = ({ navigation }: AuthScreenProps) => {
               co2Amount={item.co2Produced}
             />
           )}
+          scrollEnabled={true}
         />
       </View>
-
       <Navbar navigation={navigation} />
     </View>
   );
@@ -68,7 +68,7 @@ const styles = StyleSheet.create({
   },
   flatListContainer: {
     backgroundColor: "#1D3623",
-    flex: 1,
+    height: "77%",
     alignItems: "center",
   },
 });
