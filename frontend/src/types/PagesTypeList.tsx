@@ -4,6 +4,7 @@ export type LockScreenParamList = {
   UserProfile: undefined;
   Gifts: undefined;
   EcoRank: undefined;
+  Calculator: undefined;
 };
 export type AuthScreenProps = {
   navigation: {

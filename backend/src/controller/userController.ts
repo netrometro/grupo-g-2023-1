@@ -115,4 +115,35 @@ export default {
       return reply.send(e);
     }
   },
+  async updateUserCO2Emit(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string(),
+      co2Emit: z.number(),
+    });
+    try {
+      const { email, co2Emit } = userSchema.parse(request.body);
+
+      const user = await prisma.usuario.findUnique({ where: { email } });
+
+      const updatedUser = await prisma.usuario.update({
+        where: { email },
+        data: { co2Produced: co2Emit },
+      });
+      return reply.send(updatedUser);
+    } catch (e) {
+      return reply.send({ e });
+    }
+  },
+  async getAllUsersByOrderOfCo2(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const usersByOrder = await prisma.usuario.findMany({
+        orderBy: {
+          co2Produced: "asc",
+        },
+      });
+      return reply.send(usersByOrder);
+    } catch (e) {
+      return reply.send({ e });
+    }
+  },
 };

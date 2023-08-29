@@ -8,6 +8,7 @@ import AuthScreen from "./src/pages/AuthScreen";
 import Navbar from "./src/components/Navbar";
 import { AuthScreenProps } from "./src/types/PagesTypeList";
 import UserProfile from "./src/pages/UserProfile";
+import Calculator from "./src/pages/Calculator";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,7 @@ function App() {
         <Stack.Screen name="Gifts" component={Gifts} />
         <Stack.Screen name="EcoRank" component={EcoRank} />
         <Stack.Screen name="UserProfile" component={UserProfile} />
+        <Stack.Screen name="Calculator" component={Calculator} />
       </Stack.Navigator>
     </NavigationContainer>
   );
