@@ -120,9 +120,15 @@ export default {
     }
   },
   async updateUserCO2Emit(request: FastifyRequest, reply: FastifyReply) {
-    const { email, co2Emit } = request.params as RequestBody;
+    const userSchema = z.object({
+      email: z.string(),
+      co2Emit: z.number(),
+    });
     try {
+      const { email, co2Emit } = userSchema.parse(request.body);
+
       const user = await prisma.usuario.findUnique({ where: { email } });
+
       const updatedUser = await prisma.usuario.update({
         where: { email },
         data: { co2Produced: co2Emit },
