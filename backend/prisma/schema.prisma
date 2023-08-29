@@ -16,6 +16,7 @@ model usuario {
   created_at DateTime    @default(now())
   password   String
   co2Produced Int @default(0)
+  isAdmin     Boolean @default(false)
   posts post[]
 }
 
