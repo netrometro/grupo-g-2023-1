@@ -1,5 +1,6 @@
+import { PrismaClient } from "@prisma/client";
 import { categSchema } from "../Schema/categSchema";
-import { prisma } from "../prisma/prismaClient";
+const prisma = new PrismaClient();
 
 export async function createCateg(input: categSchema) {
     const categ = await prisma.categoryPost.create({
