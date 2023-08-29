@@ -6,7 +6,7 @@ import { AuthScreenProps } from "../../types/PagesTypeList";
 const Gifts = ({ navigation }: AuthScreenProps) => {
   return (
     <View style={styles.container}>
-      <Text>Gifts</Text>
+      <Text>EcoHints</Text>
       <Navbar navigation={navigation} />
     </View>
   );
