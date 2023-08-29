@@ -3,6 +3,10 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { User } from "../interfaces/userInterface";
 import z from "zod";
 const prisma = new PrismaClient();
+interface RequestBody {
+  email: string;
+  co2Emit: number;
+}
 export default {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
@@ -32,7 +36,7 @@ export default {
     } catch (e: any) {
       console.log(e);
       if (e.issues && e.issues[0].code === "too_small") {
-        return reply.code(401).send({ error: e.issues[0].message }); // Send the custom error message
+        return reply.code(401).send({ error: e.issues[0].message });
       } else {
         return reply.code(401).send({ error: "Erro ao realizar o cadastro" });
       }
@@ -42,7 +46,7 @@ export default {
   async loginUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
       email: z.string().email(),
-      password: z.string().min(6),
+      password: z.string(),
     });
 
     try {
@@ -60,7 +64,7 @@ export default {
         return reply.status(401).send({ error: "Senha ou usuário incorretos" });
       }
 
-      return reply.status(200).send({ msg: "Logado" });
+      return reply.status(200).send({ email, password });
     } catch (e) {
       console.error(e);
       return reply
@@ -93,6 +97,63 @@ export default {
       return reply.send({
         error: "Ocorreu um erro ao procurar todos os usuários",
       });
+    }
+  },
+
+  async deleteUser(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string(),
+    });
+    try {
+      const { email } = userSchema.parse(request.body);
+
+      const user = await prisma.usuario.findUnique({ where: { email } });
+
+      if (!user) {
+        return reply.send({ error: "usuario não encontrado" });
+      }
+
+      await prisma.usuario.delete({ where: { email } });
+      return reply.send({ menssage: "usuario deletado!" });
+    } catch (e) {
+      return reply.send(e);
+    }
+  },
+  
+  async updateUserCO2Emit(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string(),
+      co2Emit: z.number(),
+    });
+    try {
+      const { email, co2Emit } = userSchema.parse(request.body);
+
+      const user = await prisma.usuario.findUnique({ where: { email } });
+
+      const updatedUser = await prisma.usuario.update({
+        where: { email },
+        data: { co2Produced: co2Emit },
+      });
+      return reply.send(updatedUser);
+    } catch (e) {
+      return reply.send({ e });
+    }
+  },
+  async getAllUsersByOrderOfCo2(request: FastifyRequest, reply: FastifyReply) {
+    try {
+      const usersByOrder = await prisma.usuario.findMany({
+        where: {
+          co2Produced: {
+            gt: 0,
+          },
+        },
+        orderBy: {
+          co2Produced: "asc",
+        },
+      });
+      return reply.send(usersByOrder);
+    } catch (e) {
+      return reply.send({ e });
     }
   },
 };

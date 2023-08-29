@@ -1,11 +1,36 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import Navbar from "../../components/Navbar";
 import { AuthScreenProps } from "../../types/PagesTypeList";
 import { UserCircle } from "phosphor-react-native";
 import { DivisionLine } from "../../components/UI/DivisionLine";
+import { globalEmail } from "../GlobalVariables";
+import { useEffect, useState } from "react";
+import axios from "axios";
 const UserProfile = ({ navigation }: AuthScreenProps) => {
   const iconSize = 150;
+  const [userDeleted, setUserDeleted] = useState(false);
+  const handleLogout = () => {
+    navigation.navigate("AuthScreen");
+  };
+  const deleteAccount = () => {
+    axios
+      .post("https://ecoaware-cm57.onrender.com/deleteUser", {
+        email: globalEmail,
+      })
+      .then((res) => {
+        if (res.status === 200) {
+          console.log(res.status);
+          console.log(globalEmail);
+          navigation.navigate("AuthScreen");
+          setUserDeleted(true);
+        }
+      })
+      .catch((error) => {
+        console.log(error.response.data.error);
+        console.log(globalEmail);
+      });
+  };
   return (
     <View style={styles.container}>
       <View style={styles.userProfileContainer}>
@@ -16,11 +41,24 @@ const UserProfile = ({ navigation }: AuthScreenProps) => {
       </View>
       <DivisionLine />
       <View style={styles.infoContainer}>
-        <Text style={styles.infoText}>Nome:</Text>
+        <Text style={styles.infoText}>Email: {globalEmail}</Text>
         <Text style={styles.infoText}>idade:</Text>
         <Text style={styles.infoText}>Senha:</Text>
         <Text style={styles.infoText}>Comida favorita:</Text>
         <Text style={styles.infoText}>Infos:</Text>
+      </View>
+      <View style={styles.centerView}>
+        <TouchableOpacity style={styles.deleteButton} onPress={deleteAccount}>
+          <Text style={styles.infoText}>Deletar Usuario</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.deleteButton} onPress={handleLogout}>
+          <Text style={styles.infoText}>Sair </Text>
+        </TouchableOpacity>
+        {userDeleted ? (
+          <Text style={styles.infoText}>Usuario deletado com sucesso</Text>
+        ) : (
+          <></>
+        )}
       </View>
       <Navbar navigation={navigation} />
     </View>
@@ -59,5 +97,16 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     width: "80%",
     paddingLeft: 15,
+  },
+  centerView: {
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  deleteButton: {
+    backgroundColor: "red",
+    padding: 10,
+    borderRadius: 15,
+    marginTop: 10,
   },
 });

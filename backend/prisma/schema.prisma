@@ -15,6 +15,7 @@ model usuario {
   email      String      @unique
   created_at DateTime    @default(now())
   password   String
+  co2Produced Int @default(0)
   posts post[]
 }
 
@@ -23,4 +24,19 @@ model post {
   quote String  @default(" ")
   usuario   usuario @relation(fields: [userId], references: [userId])
   userId Int
+}
+
+model CategoryPost {
+  categorypostId    Int           @id @default(autoincrement())
+  name              String
+  infoposts         InfoPost[]
+}
+
+model InfoPost {
+  infopostId        Int           @id @default(autoincrement())
+  title             String
+  text              String
+  created_at        DateTime      @default(now())
+  category          CategoryPost  @relation(fields: [categorypostId], references: [categorypostId])
+  categorypostId    Int 
 }
