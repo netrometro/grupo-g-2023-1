@@ -3,6 +3,10 @@ import { FastifyReply, FastifyRequest } from "fastify";
 import { User } from "../interfaces/userInterface";
 import z from "zod";
 const prisma = new PrismaClient();
+interface RequestBody {
+  email: string;
+  co2Emit: number;
+}
 export default {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
@@ -32,7 +36,7 @@ export default {
     } catch (e: any) {
       console.log(e);
       if (e.issues && e.issues[0].code === "too_small") {
-        return reply.code(401).send({ error: e.issues[0].message }); // Send the custom error message
+        return reply.code(401).send({ error: e.issues[0].message });
       } else {
         return reply.code(401).send({ error: "Erro ao realizar o cadastro" });
       }
@@ -138,6 +142,11 @@ export default {
   async getAllUsersByOrderOfCo2(request: FastifyRequest, reply: FastifyReply) {
     try {
       const usersByOrder = await prisma.usuario.findMany({
+        where: {
+          co2Produced: {
+            gt: 0,
+          },
+        },
         orderBy: {
           co2Produced: "asc",
         },

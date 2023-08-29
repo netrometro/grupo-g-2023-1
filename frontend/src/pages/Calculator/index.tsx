@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View, Alert } from "react-native";
 import Slider from "@react-native-community/slider";
 import CheckBox from "expo-checkbox";
 import React from "react";
@@ -6,13 +6,17 @@ import { Textbox } from "phosphor-react-native";
 import { TouchableOpacity } from "react-native";
 import { globalEmail } from "../GlobalVariables";
 import axios from "axios";
+import { AuthScreenProps } from "../../types/PagesTypeList";
 interface carFueldObjectInterface {
   [key: string]: number;
 }
 interface userDietInterface {
   [key: string]: number;
 }
-const Calculator = () => {
+interface RequestBody {
+  email: string;
+}
+const Calculator = ({ navigation }: AuthScreenProps) => {
   const [eletricityAmount, setEletricityAmount] = React.useState(150);
   const [hasCar, setHasCar] = React.useState(false);
   const [carKm, setCarKm] = React.useState<number>(0);
@@ -22,16 +26,7 @@ const Calculator = () => {
   const [userDiet, setUserDiet] = React.useState<string>("");
   const [cellphoneHours, setCellphoneHours] = React.useState<number>(0);
   const [showResult, setShowResult] = React.useState<boolean>(false);
-  const updateCo2 = () => {
-    try {
-      axios.post("http://localhost/updateCo2", {
-        email: globalEmail,
-        co2: calculateResult(),
-      });
-    } catch (error) {
-      console.log(error);
-    }
-  };
+
   const carFuelObject: carFueldObjectInterface = {
     gasolina: 2.3,
     diesel: 2.7,
@@ -59,7 +54,6 @@ const Calculator = () => {
   };
   const carFuelConsumption = carFuelObject[carFuel];
   const userDietValue = userDietObj[userDiet];
-
   const co2FromEletricity = consumption(eletricityAmount, 0.23);
   const co2FromCar = Number(fuelConsuption(carKm, carEfficiency));
   const co2SavedFromPublicTransport = publicTransportKm * 0.67;
@@ -71,6 +65,26 @@ const Calculator = () => {
   };
   const calculateSavedCo2 = () => {
     return co2SavedFromPublicTransport + co2SavedFromDiet;
+  };
+  const co2Value: number = calculateResult();
+
+  const requestData = {
+    email: globalEmail,
+    co2: 2,
+  };
+  const updateCo2 = () => {
+    axios
+      .put("https://ecoaware-cm57.onrender.com/updateUserCo2", {
+        email: globalEmail,
+        co2Emit: co2Value,
+      } as RequestBody)
+      .then((response) => {
+        console.log("Response status:", response.status);
+        console.log("Response data:", response.data);
+      })
+      .catch((error) => {
+        console.log("Error:", error);
+      });
   };
   return (
     <ScrollView style={styles.container}>
@@ -301,20 +315,6 @@ const Calculator = () => {
             {((cellphoneHours * 5 * 30) / 1000).toFixed(2)} kg de CO2/Mês
           </Text>
         </View>
-        <TouchableOpacity
-          style={styles.calculatorBtn}
-          onPress={() => {
-            updateCo2();
-            setShowResult(true);
-            const timerId = setTimeout(() => {
-              console.log("Timer executed after 2 seconds");
-            }, 5000);
-            setShowResult(false);
-            clearTimeout(timerId);
-          }}
-        >
-          <Text style={styles.infoText}>Calcular resultado</Text>
-        </TouchableOpacity>
         {showResult && (
           <>
             <View style={styles.resultContainer}>
@@ -328,8 +328,27 @@ const Calculator = () => {
                 mês
               </Text>
             </View>
+            <View style={styles.resultContainer}>
+              <Text style={styles.questionText}>
+                Resultado calculado com sucesso, você será redirecionado para
+                home
+              </Text>
+            </View>
           </>
         )}
+        <TouchableOpacity
+          style={styles.calculatorBtn}
+          onPress={() => {
+            updateCo2();
+            setShowResult(true);
+            setTimeout(() => {
+              setShowResult(false);
+              navigation.navigate("Home");
+            }, 5000);
+          }}
+        >
+          <Text style={styles.infoText}>Calcular resultado</Text>
+        </TouchableOpacity>
       </View>
     </ScrollView>
   );
