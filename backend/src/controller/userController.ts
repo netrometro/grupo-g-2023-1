@@ -156,4 +156,34 @@ export default {
       return reply.send({ e });
     }
   },
+  async updateUserToAdmin (request: FastifyRequest, reply: FastifyReply){
+    const userSchema = z.object({
+      email: z.string(),
+    });
+  
+    try {
+      const { email} = userSchema.parse(request.body);
+      
+      let isUserAdmin = await prisma.usuario.findUnique({ where: { email, isAdmin: true } });
+      if (isUserAdmin){
+        reply.code(401).send("Usuário já é admin")
+      } else{
+        const userExist = await prisma.usuario.findUnique({where:{email}})
+      if(!userExist){
+        return reply.code(404).send("Usuário não encontrado")
+      }
+        const updatedUser = await prisma.usuario.update({
+          where: { email },
+          data: { isAdmin: true},
+        });
+        if (updatedUser) {
+          return reply.send({ message: 'Usuário atualizado para administrador com sucesso'});
+        } else {
+          return reply.send({ error: 'Usuário não encontrado' });
+        }
+      }
+    } catch (error) {
+      return reply.send(error)
+    }
+  },
 };
