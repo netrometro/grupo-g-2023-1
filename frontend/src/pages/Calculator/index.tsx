@@ -331,24 +331,26 @@ const Calculator = ({ navigation }: AuthScreenProps) => {
             <View style={styles.resultContainer}>
               <Text style={styles.questionText}>
                 Resultado calculado com sucesso, você será redirecionado para
-                home
+                verificar sua colocação no ranking
               </Text>
             </View>
           </>
         )}
-        <TouchableOpacity
-          style={styles.calculatorBtn}
-          onPress={() => {
-            updateCo2();
-            setShowResult(true);
-            setTimeout(() => {
-              setShowResult(false);
-              navigation.navigate("Home");
-            }, 5000);
-          }}
-        >
-          <Text style={styles.infoText}>Calcular resultado</Text>
-        </TouchableOpacity>
+        {!showResult && (
+          <TouchableOpacity
+            style={styles.calculatorBtn}
+            onPress={() => {
+              updateCo2();
+              setShowResult(true);
+              setTimeout(() => {
+                setShowResult(false);
+                navigation.navigate("EcoRank");
+              }, 8000);
+            }}
+          >
+            <Text style={styles.infoText}>Calcular resultado</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </ScrollView>
   );
