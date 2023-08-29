@@ -20,7 +20,7 @@ export async function createCateg (
     } catch (error){
         return reply
         .status(500)
-        .send({ error: "Não foi possível realizar a categagem" });
+        .send({ error: "Não foi possível criar categoria" });
     }
 }
 export async function getCateg (
