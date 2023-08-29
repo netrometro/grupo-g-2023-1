@@ -19,7 +19,7 @@ export async function registerCateg (
 
         return reply
         .status(201)
-        .send({message: "Categoria criada com sucesso!"});
+        .send(categ);
     } catch(error) {
         return reply
         .status(500)
@@ -74,6 +74,7 @@ export async function editCateg(
 
         return reply
         .status(200)
+        .send(categ)
         .send({ message: "Categoria atualizada com sucesso!"});
     } catch(error){
         return reply
@@ -94,6 +95,7 @@ export async function removeCateg(
        
         return reply
         .status(204)
+        .send(categ)
         .send({ message: "Categoria deletada com sucesso!"});
     } catch (error) {
         return reply
