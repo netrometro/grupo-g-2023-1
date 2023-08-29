@@ -3,7 +3,7 @@ import React from "react";
 import Navbar from "../../components/Navbar";
 import { AuthScreenProps } from "../../types/PagesTypeList";
 
-const Gifts = ({ navigation }: AuthScreenProps) => {
+const EcoHints = ({ navigation }: AuthScreenProps) => {
   return (
     <View style={styles.container}>
       <Text>EcoHints</Text>
@@ -12,7 +12,7 @@ const Gifts = ({ navigation }: AuthScreenProps) => {
   );
 };
 
-export default Gifts;
+export default EcoHints;
 
 const styles = StyleSheet.create({
   container: {
