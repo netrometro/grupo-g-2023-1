@@ -1,105 +1,129 @@
 import {FastifyReply, FastifyRequest} from "fastify";
-import { 
-    createCateg, 
-    deleteCateg, 
-    listCateg, 
-    listCategs, 
-    updateCateg
- } from "../services/categService";
-import { categSchema } from "../Schema/categSchema";
+import { categSchema } from '../Schema/categSchema';
+import { prisma } from "../prisma/prismaClient";
 
-export async function registerCateg (
-    request: FastifyRequest<{Body: categSchema}>, 
+export async function createCateg (
+    request: FastifyRequest, 
     reply: FastifyReply){
 
-    const body = request.body;
-
     try{
-        const categ = await createCateg(body)
+        const {name} = request.body as categSchema;
+        const categ = await prisma.categoryPost.create({
+            data: {
+                name: name,
+            }
+        });
 
         return reply
         .status(201)
         .send(categ);
-    } catch(error) {
+    } catch (error){
         return reply
         .status(500)
-        .send({ message: "Erro interno do servidor"})
+        .send({ error: "Não foi possível realizar a categagem" });
     }
-};
-
-export async function getCateg(
-    request: FastifyRequest, 
-    reply: FastifyReply) {
-    
-    const id = Object(request.params);
-    
-    try{
-        const categ = await listCateg(id.id);
-        
-        return reply.status(200).send(categ);
-    } catch(error){
-        return reply
-        .status(500)
-        .send({ message: "Erro interno do servidor"})
-    }
-    
-};
-
-export async function showAllCategs(
-    request: FastifyRequest, 
-    reply: FastifyReply) {
-    
-    try{
-        const categ = await listCategs();
-        
-        return reply.status(200).send(categ);
-    } catch(error){
-        return reply
-        .status(500)
-        .send({ message: "Erro interno do servidor"});
-    }
-    
-};
-
-export async function editCateg(
-    request: FastifyRequest<{Body:categSchema}>, 
-    reply: FastifyReply) {
-    
-    const id = Object(request.params);
-    
-    const body = request.body;
-    
-    try{
-        const categ = await updateCateg(id.id, body);
-
-        return reply
-        .status(200)
-        .send(categ)
-        .send({ message: "Categoria atualizada com sucesso!"});
-    } catch(error){
-        return reply
-        .status(500)
-        .send({ message: "Erro interno do servidor"});
-    }
-    
-};
-
-export async function removeCateg(
+}
+export async function getCateg (
     request: FastifyRequest, 
     reply: FastifyReply){
-    
-    const id = Object(request.params);
-    
-    try {
-        const categ = await deleteCateg(id.id);
-       
-        return reply
-        .status(204)
-        .send(categ)
-        .send({ message: "Categoria deletada com sucesso!"});
+
+    try{
+        const {categorypostId} = request.params as categSchema;
+
+        const categ = await prisma.categoryPost.findUnique({
+        where: { 
+            categorypostId: Number(categorypostId) },
+        });
+
+     return reply
+        .status(200)
+        .send(categ);
     } catch (error) {
         return reply
         .status(500)
-        .send({ message: "Erro interno do servidor"});
-    }
-};
+        .send({ message: "Não foi possível encontrar essa categoria"});
+    }};
+
+export async function getAllCategs(
+    request: FastifyRequest, 
+    reply: FastifyReply) {
+
+    try {
+        const categ = await prisma.categoryPost.findMany();
+        
+        return reply
+        .status(200)
+        .send(categ);
+    } catch (error) {
+        return reply
+        .status(500)
+        .send({ message: "Ocorreu um erro ao procurar todos as categorias",
+        });
+    }};
+
+export async function updateCateg (
+    request: FastifyRequest, 
+    reply: FastifyReply){
+
+    try {
+        const {name, categorypostId} = request.body as categSchema;
+
+        let categ = await prisma.categoryPost.findUnique({
+            where: {categorypostId: Number(categorypostId)}
+        })
+
+        if(!categ){
+            return reply
+            .status(404)
+            .send({ message: "Categoria não encontrada."});
+        }
+
+        categ = await prisma.categoryPost.update({
+            where:{
+                name: name, 
+                categorypostId: Number(categorypostId)}, 
+                data: {name}
+        })
+
+        return reply
+        .status(200)
+        .send({ message: "Categoria atualizada com sucesso!"})
+    } catch (error) {
+        return reply
+        .status(500)
+        .send({ error: "Não foi possível atualizar a categoria."})
+    }};
+
+export async function deleteCateg(
+    request: FastifyRequest, 
+    reply: FastifyReply){
+    
+        try {
+        const {categorypostId} = request.params as categSchema;
+        const {name} = request.body as categSchema;
+
+        let categ = await prisma.categoryPost.findUnique({
+            where: {
+                name: name, 
+                categorypostId: Number(categorypostId)}
+        })
+
+        if(!categ){
+            return reply
+            .status(404)
+            .send({error: "Categoria não encontrada."});
+        }
+
+        categ = await prisma.categoryPost.delete({
+            where:{
+                name: name, 
+                categorypostId: Number(categorypostId)}})
+
+        return reply
+        .status(203)
+        .send({message: "Categoria deletada com sucesso!"})
+    } catch (error) {
+        return reply
+        .status(500)
+        .send({ error: "Não foi possível deletar categoria."})
+    }};

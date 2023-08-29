@@ -115,6 +115,7 @@ export default {
       return reply.send(e);
     }
   },
+  
   async updateUserCO2Emit(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
       email: z.string(),

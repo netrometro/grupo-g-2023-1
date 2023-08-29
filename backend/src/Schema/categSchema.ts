@@ -1,7 +1,8 @@
 import { z } from "zod";
 
-const categSchema = z.object({
-    name: z.string(),
+export const categSchema = z.object({
+    categorypostId:     z.string(),
+    name:               z.string(),
 });
 
 export type categSchema = z.infer<typeof categSchema>;
