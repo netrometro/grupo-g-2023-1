@@ -2,11 +2,23 @@ import { PrismaClient } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { User } from "../interfaces/userInterface";
 import z from "zod";
+import nodemailer from "nodemailer";
 const prisma = new PrismaClient();
 interface RequestBody {
   email: string;
   co2Emit: number;
 }
+
+const transporter = nodemailer.createTransport({
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
+  auth: {
+    user: "ecoawareauth@gmail.com",
+    pass: "boyfddfaqinmczpl",
+  },
+});
+
 export default {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
@@ -17,7 +29,13 @@ export default {
     });
     try {
       const { email, password } = userSchema.parse(request.body);
-
+      const info = await transporter.sendMail({
+        from: '"EcoAware Auth" <ecoawareauth@gmail.com>', // sender address
+        to: email,
+        subject: "Código de verificação", // Subject line
+        text: "Sua conta foi criada com sucesso?", // plain text body
+        html: "<b>Sua conta foi criada com sucesso</b>", // html body
+      });
       let user = await prisma.usuario.findUnique({ where: { email } });
       if (user) {
         reply
@@ -119,21 +137,17 @@ export default {
       return reply.send(e);
     }
   },
-  
-  async updateUserCO2Emit(request: FastifyRequest, reply: FastifyReply) {
-    const userSchema = z.object({
-      email: z.string(),
-      co2Emit: z.number(),
-    });
-    try {
-      const { email, co2Emit } = userSchema.parse(request.body);
 
+  async updateUserCO2Emit(request: FastifyRequest, reply: FastifyReply) {
+    const { email, co2Emit } = request.body as any;
+    try {
       const user = await prisma.usuario.findUnique({ where: { email } });
 
       const updatedUser = await prisma.usuario.update({
         where: { email },
         data: { co2Produced: co2Emit },
       });
+      console.log(request.body);
       return reply.send(updatedUser);
     } catch (e) {
       return reply.send({ e });
@@ -156,34 +170,38 @@ export default {
       return reply.send({ e });
     }
   },
-  async updateUserToAdmin (request: FastifyRequest, reply: FastifyReply){
+  async updateUserToAdmin(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
       email: z.string(),
     });
-  
+
     try {
-      const { email} = userSchema.parse(request.body);
-      
-      let isUserAdmin = await prisma.usuario.findUnique({ where: { email, isAdmin: true } });
-      if (isUserAdmin){
-        reply.code(401).send("Usuário já é admin")
-      } else{
-        const userExist = await prisma.usuario.findUnique({where:{email}})
-      if(!userExist){
-        return reply.code(404).send("Usuário não encontrado")
-      }
+      const { email } = userSchema.parse(request.body);
+
+      let isUserAdmin = await prisma.usuario.findUnique({
+        where: { email, isAdmin: true },
+      });
+      if (isUserAdmin) {
+        reply.code(401).send("Usuário já é admin");
+      } else {
+        const userExist = await prisma.usuario.findUnique({ where: { email } });
+        if (!userExist) {
+          return reply.code(404).send("Usuário não encontrado");
+        }
         const updatedUser = await prisma.usuario.update({
           where: { email },
-          data: { isAdmin: true},
+          data: { isAdmin: true },
         });
         if (updatedUser) {
-          return reply.send({ message: 'Usuário atualizado para administrador com sucesso'});
+          return reply.send({
+            message: "Usuário atualizado para administrador com sucesso",
+          });
         } else {
-          return reply.send({ error: 'Usuário não encontrado' });
+          return reply.send({ error: "Usuário não encontrado" });
         }
       }
     } catch (error) {
-      return reply.send(error)
+      return reply.send(error);
     }
   },
 };

@@ -15,6 +15,7 @@ interface userDietInterface {
 interface RequestBody {
   email: string;
 }
+
 const Calculator = ({ navigation }: AuthScreenProps) => {
   const [eletricityAmount, setEletricityAmount] = React.useState(150);
   const [hasCar, setHasCar] = React.useState(false);
