@@ -1,11 +1,11 @@
-import { ScrollView, StyleSheet, Text, View } from "react-native";
+import { ScrollView, StyleSheet, Text, View, Alert } from "react-native";
 import Slider from "@react-native-community/slider";
 import CheckBox from "expo-checkbox";
 import React from "react";
-import { Textbox } from "phosphor-react-native";
 import { TouchableOpacity } from "react-native";
 import { globalEmail } from "../GlobalVariables";
 import axios from "axios";
+import { AuthScreenProps } from "../../types/PagesTypeList";
 interface carFueldObjectInterface {
   [key: string]: number;
 }
@@ -15,7 +15,8 @@ interface userDietInterface {
 interface RequestBody {
   email: string;
 }
-const Calculator = () => {
+
+const Calculator = ({ navigation }: AuthScreenProps) => {
   const [eletricityAmount, setEletricityAmount] = React.useState(150);
   const [hasCar, setHasCar] = React.useState(false);
   const [carKm, setCarKm] = React.useState<number>(0);
@@ -74,13 +75,10 @@ const Calculator = () => {
   const updateCo2 = () => {
     axios
       .put("https://ecoaware-cm57.onrender.com/updateUserCo2", {
-        email: "email@gmail",
-        co2: 10,
+        email: globalEmail,
+        co2Emit: co2Value,
       } as RequestBody)
-      .then((response) => {
-        console.log("Response status:", response.status);
-        console.log("Response data:", response.data);
-      })
+      .then((response) => {})
       .catch((error) => {
         console.log("Error:", error);
       });
@@ -314,20 +312,6 @@ const Calculator = () => {
             {((cellphoneHours * 5 * 30) / 1000).toFixed(2)} kg de CO2/Mês
           </Text>
         </View>
-        <TouchableOpacity
-          style={styles.calculatorBtn}
-          onPress={() => {
-            updateCo2();
-            setShowResult(true);
-            const timerId = setTimeout(() => {
-              console.log("Timer executed after 2 seconds");
-            }, 5000);
-
-            clearTimeout(timerId);
-          }}
-        >
-          <Text style={styles.infoText}>Calcular resultado</Text>
-        </TouchableOpacity>
         {showResult && (
           <>
             <View style={styles.resultContainer}>
@@ -341,7 +325,28 @@ const Calculator = () => {
                 mês
               </Text>
             </View>
+            <View style={styles.resultContainer}>
+              <Text style={styles.questionText}>
+                Resultado calculado com sucesso, você será redirecionado para
+                verificar sua colocação no ranking
+              </Text>
+            </View>
           </>
+        )}
+        {!showResult && (
+          <TouchableOpacity
+            style={styles.calculatorBtn}
+            onPress={() => {
+              updateCo2();
+              setShowResult(true);
+              setTimeout(() => {
+                setShowResult(false);
+                navigation.navigate("EcoRank");
+              }, 8000);
+            }}
+          >
+            <Text style={styles.infoText}>Calcular resultado</Text>
+          </TouchableOpacity>
         )}
       </View>
     </ScrollView>

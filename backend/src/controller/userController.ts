@@ -36,7 +36,7 @@ export default {
     } catch (e: any) {
       console.log(e);
       if (e.issues && e.issues[0].code === "too_small") {
-        return reply.code(401).send({ error: e.issues[0].message }); // Send the custom error message
+        return reply.code(401).send({ error: e.issues[0].message });
       } else {
         return reply.code(401).send({ error: "Erro ao realizar o cadastro" });
       }
@@ -119,6 +119,7 @@ export default {
       return reply.send(e);
     }
   },
+  
   async updateUserCO2Emit(request: FastifyRequest, reply: FastifyReply) {
     const { email, co2Emit } = request.body as any;
     try {
@@ -137,6 +138,11 @@ export default {
   async getAllUsersByOrderOfCo2(request: FastifyRequest, reply: FastifyReply) {
     try {
       const usersByOrder = await prisma.usuario.findMany({
+        where: {
+          co2Produced: {
+            gt: 0,
+          },
+        },
         orderBy: {
           co2Produced: "asc",
         },
@@ -144,6 +150,36 @@ export default {
       return reply.send(usersByOrder);
     } catch (e) {
       return reply.send({ e });
+    }
+  },
+  async updateUserToAdmin (request: FastifyRequest, reply: FastifyReply){
+    const userSchema = z.object({
+      email: z.string(),
+    });
+  
+    try {
+      const { email} = userSchema.parse(request.body);
+      
+      let isUserAdmin = await prisma.usuario.findUnique({ where: { email, isAdmin: true } });
+      if (isUserAdmin){
+        reply.code(401).send("Usuário já é admin")
+      } else{
+        const userExist = await prisma.usuario.findUnique({where:{email}})
+      if(!userExist){
+        return reply.code(404).send("Usuário não encontrado")
+      }
+        const updatedUser = await prisma.usuario.update({
+          where: { email },
+          data: { isAdmin: true},
+        });
+        if (updatedUser) {
+          return reply.send({ message: 'Usuário atualizado para administrador com sucesso'});
+        } else {
+          return reply.send({ error: 'Usuário não encontrado' });
+        }
+      }
+    } catch (error) {
+      return reply.send(error)
     }
   },
 };

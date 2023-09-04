@@ -1,7 +1,7 @@
 import * as React from "react";
 import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 import {
-  Gift,
+  Leaf,
   UserCircle,
   House,
   GlobeHemisphereWest,
@@ -43,13 +43,13 @@ function Navbar({ navigation }: AuthScreenProps) {
         </TouchableOpacity>
         <TouchableOpacity
           onPress={() => {
-            navigation.navigate("Gifts");
+            navigation.navigate("EcoHints");
           }}
         >
-          <Gift
+          <Leaf
             size={iconSize}
             color="#5A875D"
-            weight={isIconFilled("Gifts")}
+            weight={isIconFilled("EcoHints")}
           />
         </TouchableOpacity>
         <TouchableOpacity onPress={showModal}>

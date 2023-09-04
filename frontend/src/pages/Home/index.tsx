@@ -11,7 +11,7 @@ const Home = ({ navigation }: AuthScreenProps) => {
         style={styles.calcBtn}
         onPress={() => navigation.navigate("Calculator")}
       >
-        <Text style={styles.calcBtnText}>CO2 Calculator</Text>
+        <Text style={styles.calcBtnText}>Calculadora CO2</Text>
       </TouchableOpacity>
       <Navbar navigation={navigation} />
     </View>
