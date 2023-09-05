@@ -8,6 +8,6 @@ export default function (fastify: FastifyInstance) {
   fastify.post("/deleteUser", UserController.deleteUser);
   fastify.put("/updateUserCo2", UserController.updateUserCO2Emit);
   fastify.get("/getUsersByCo2", UserController.getAllUsersByOrderOfCo2);
-  fastify.get("/getUserOTP", UserController.getUserOtp);
+  fastify.post("/getUserOTP", UserController.getUserOtp);
   fastify.put("/updateUsertoAdmin", UserController.updateUserToAdmin);
 }
