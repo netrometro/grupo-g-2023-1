@@ -86,10 +86,7 @@ export default {
       const { email, password } = userSchema.parse(request.body);
 
       const user = await prisma.usuario.findUnique({
-        where: {
-          email: email,
-          isUserVerified: true,
-        },
+        where: { email, isUserVerified: true },
       });
 
       if (!user) {
