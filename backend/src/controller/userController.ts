@@ -40,16 +40,16 @@ export default {
 
     try {
       const { email, password } = userSchema.parse(request.body);
-      const otp = parseInt(generateOTP(6)); // Generate the OTp
+      const otp = parseInt(generateOTP(6));
 
       const emailContent = `
-        <b>Sua conta foi criada com sucesso, verifique sua conta com esse código de verificação ${otp}</b>
+        <b>Sua conta foi criada com sucesso</b>
       `;
 
       const info = await transporter.sendMail({
         from: '"EcoAware Auth" <ecoawareauth@gmail.com>',
         to: email,
-        subject: "Código de verificação",
+        subject: "EcoAware",
         text: "Sua conta foi criada com sucesso",
         html: emailContent,
       });
@@ -202,6 +202,24 @@ export default {
       const updatedUser = await prisma.usuario.update({
         where: { email },
         data: { co2Produced: co2Emit },
+      });
+      const emailContentBad = `<b>Olá ${email} você emitiu ${co2Emit} kg de co2 esse mês, é bastante! Vamos melhorar?</b>`;
+      const emailContent = `
+      <b>Olá ${email} você emitiu ${co2Emit} kg de co2 esse mês, parabéns! Continue assim</b>
+    `;
+      function sendEmail(co2Emit: number) {
+        if (co2Emit > 300) {
+          return emailContentBad;
+        } else {
+          return emailContent;
+        }
+      }
+      const info = await transporter.sendMail({
+        from: '"EcoAware Auth" <ecoawareauth@gmail.com>',
+        to: email,
+        subject: "EcoAware",
+        text: "Sua conta foi criada com sucesso",
+        html: sendEmail(co2Emit),
       });
       console.log(request.body);
       return reply.send(updatedUser);
