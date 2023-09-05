@@ -26,8 +26,8 @@ const transporter = nodemailer.createTransport({
   port: 465,
   secure: true,
   auth: {
-    user: "ecoawareauth@gmail.com",
-    pass: "boyfddfaqinmczpl",
+    user: process.env.SECRET_USER,
+    pass: process.env.SECRET_PASS,
   },
 });
 
@@ -49,6 +49,14 @@ export default {
           .code(401)
           .send({ error: "Já existe um usuário com essas credenciais" });
       } else {
+        const info = await transporter.sendMail({
+          from: '"EcoAware Auth" <ecoawareauth@gmail.com>',
+          to: email,
+          subject: "Código de verificação",
+          text:
+            "Sua conta foi criada com sucesso sua senha de verificação é" + otp,
+          html: "<b>Sua senha de verificação é</b>" + otp,
+        });
         await prisma.usuario.create({
           data: {
             email,
