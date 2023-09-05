@@ -18,7 +18,17 @@ const transporter = nodemailer.createTransport({
     pass: "boyfddfaqinmczpl",
   },
 });
+function generateOTP(length: number): string {
+  const charset = "0123456789"; // Use the character set you prefer
+  let otp = "";
 
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    otp += charset[randomIndex];
+  }
+
+  return otp;
+}
 export default {
   async registerUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
@@ -27,6 +37,7 @@ export default {
         .string()
         .min(6, { message: "Senha deve conter no mínimo 6 caracteres" }),
     });
+    const otp = generateOTP(6);
     try {
       const { email, password } = userSchema.parse(request.body);
       const info = await transporter.sendMail({
@@ -49,7 +60,7 @@ export default {
           },
         });
       }
-      reply.send({ email, password });
+      reply.send({ email, password, otp });
       return reply.send({ msg: "Cadastrado" });
     } catch (e: any) {
       console.log(e);
