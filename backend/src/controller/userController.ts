@@ -64,6 +64,13 @@ export default {
           data: {
             email,
             password,
+          },
+        });
+        await prisma.usuario.update({
+          where: {
+            email,
+          },
+          data: {
             userOtpId: otp,
           },
         });
