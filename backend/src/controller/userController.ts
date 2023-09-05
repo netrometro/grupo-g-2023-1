@@ -37,22 +37,26 @@ export default {
         .string()
         .min(6, { message: "Senha deve conter no mínimo 6 caracteres" }),
     });
-    const otp = generateOTP(6);
-    const emailContent = `
-  <b>Sua conta foi criada com sucesso, verifique sua conta com esse código de verificação ${otp}</b>
-`;
+
     try {
       const { email, password } = userSchema.parse(request.body);
+      const otp = parseInt(generateOTP(6)); // Generate the OTp
+
+      const emailContent = `
+        <b>Sua conta foi criada com sucesso, verifique sua conta com esse código de verificação ${otp}</b>
+      `;
+
       const info = await transporter.sendMail({
-        from: '"EcoAware Auth" <ecoawareauth@gmail.com>', // sender address
+        from: '"EcoAware Auth" <ecoawareauth@gmail.com>',
         to: email,
-        subject: "Código de verificação", // Subject line
-        text: "Sua conta foi criada com sucesso", // plain text body
+        subject: "Código de verificação",
+        text: "Sua conta foi criada com sucesso",
         html: emailContent,
       });
+
       let user = await prisma.usuario.findUnique({ where: { email } });
       if (user) {
-        reply
+        return reply
           .code(401)
           .send({ error: "Já existe um usuário com essas credenciais" });
       } else {
@@ -60,17 +64,18 @@ export default {
           data: {
             email,
             password,
+            otp,
           },
         });
+        return reply.send({ msg: "Cadastrado" });
       }
-      reply.send({ email, password });
-      return reply.send({ msg: "Cadastrado" });
     } catch (e: any) {
-      console.log(e);
+      console.error(e);
+
       if (e.issues && e.issues[0].code === "too_small") {
         return reply.code(401).send({ error: e.issues[0].message });
       } else {
-        return reply.code(401).send({ e });
+        return reply.code(401).send({ error: e.message });
       }
     }
   },

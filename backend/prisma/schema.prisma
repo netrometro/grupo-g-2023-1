@@ -18,6 +18,8 @@ model usuario {
   co2Produced Int @default(0)
   isAdmin     Boolean @default(false)
   posts post[]
+  otp      Int?
+  isVerified Boolean @default(false)
 }
 
 model post {
