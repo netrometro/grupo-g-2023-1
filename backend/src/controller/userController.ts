@@ -80,6 +80,25 @@ export default {
     }
   },
 
+  async getUserOtp(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string().email(),
+    });
+
+    try {
+      const { email } = userSchema.parse(request.body);
+
+      const user = await prisma.usuario.findUnique({ where: { email } });
+
+      if (!user) {
+        return reply.status(404).send({ error: "Usuário não encontrado" });
+      } else {
+        return reply.status(200).send({ otp: user.otp });
+      }
+    } catch (e) {
+      return reply.send(e);
+    }
+  },
   async loginUser(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
       email: z.string().email(),
