@@ -53,9 +53,8 @@ export default {
           from: '"EcoAware Auth" <ecoawareauth@gmail.com>',
           to: email,
           subject: "Código de verificação",
-          text:
-            "Sua conta foi criada com sucesso sua senha de verificação é" + otp,
-          html: "<b>Sua senha de verificação é</b>" + otp,
+          text: "Sua conta foi criada com sucesso?",
+          html: "<b>Sua conta foi criada com sucesso</b>",
         });
         await prisma.usuario.create({
           data: {
