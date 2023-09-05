@@ -38,6 +38,9 @@ export default {
         .min(6, { message: "Senha deve conter no mínimo 6 caracteres" }),
     });
     const otp = generateOTP(6);
+    const emailContent = `
+  <b>Sua conta foi criada com sucesso, verifique sua conta com esse código de verificação ${otp}</b>
+`;
     try {
       const { email, password } = userSchema.parse(request.body);
       const info = await transporter.sendMail({
@@ -45,7 +48,7 @@ export default {
         to: email,
         subject: "Código de verificação", // Subject line
         text: "Sua conta foi criada com sucesso", // plain text body
-        html: "<b>Sua conta foi criada com sucesso, verifique sua conta com esse código de verificação ${otp}</b> ", // html body
+        html: emailContent,
       });
       let user = await prisma.usuario.findUnique({ where: { email } });
       if (user) {
