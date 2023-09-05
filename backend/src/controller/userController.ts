@@ -1,7 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { FastifyReply, FastifyRequest } from "fastify";
 import { User } from "../interfaces/userInterface";
-import "dotenv/config";
 import z from "zod";
 import nodemailer from "nodemailer";
 const prisma = new PrismaClient();
@@ -10,24 +9,13 @@ interface RequestBody {
   co2Emit: number;
 }
 
-function generateOTP(length: number): string {
-  const charset = "0123456789";
-  let otp = "";
-
-  for (let i = 0; i < length; i++) {
-    const randomIndex = Math.floor(Math.random() * charset.length);
-    otp += charset[randomIndex];
-  }
-  return otp;
-}
-
 const transporter = nodemailer.createTransport({
-  host: process.env.SECRET_HOST,
-  port: parseInt(process.env.SECRET_PORT || process.env.SECRET_PORT2 || ""),
+  host: "smtp.gmail.com",
+  port: 465,
   secure: true,
   auth: {
-    user: process.env.SECRET_USER,
-    pass: process.env.SECRET_PASS,
+    user: "ecoawareauth@gmail.com",
+    pass: "boyfddfaqinmczpl",
   },
 });
 
@@ -39,28 +27,25 @@ export default {
         .string()
         .min(6, { message: "Senha deve conter no mínimo 6 caracteres" }),
     });
-    const otp = generateOTP(6);
-
     try {
       const { email, password } = userSchema.parse(request.body);
+      const info = await transporter.sendMail({
+        from: '"EcoAware Auth" <ecoawareauth@gmail.com>', // sender address
+        to: email,
+        subject: "Código de verificação", // Subject line
+        text: "Sua conta foi criada com sucesso?", // plain text body
+        html: "<b>Sua conta foi criada com sucesso</b>", // html body
+      });
       let user = await prisma.usuario.findUnique({ where: { email } });
       if (user) {
         reply
           .code(401)
           .send({ error: "Já existe um usuário com essas credenciais" });
       } else {
-        const info = await transporter.sendMail({
-          from: '"EcoAware Auth" <ecoawareauth@gmail.com>',
-          to: email,
-          subject: "Código de verificação",
-          text: "Sua conta foi criada com sucesso?",
-          html: "<b>Sua conta foi criada com sucesso</b>",
-        });
         await prisma.usuario.create({
           data: {
             email,
             password,
-            userOTP: parseInt(otp),
           },
         });
       }
@@ -85,16 +70,12 @@ export default {
     try {
       const { email, password } = userSchema.parse(request.body);
 
-      const user = await prisma.usuario.findUnique({
-        where: { email, isUserVerified: true },
-      });
+      const user = await prisma.usuario.findUnique({ where: { email } });
 
       if (!user) {
         return reply.status(404).send({ error: "Usuário não encontrado" });
       }
-      if (!user.isUserVerified) {
-        return reply.status(401).send({ error: "Usuário não verificado" });
-      }
+
       const comparePassword = password === user.password;
 
       if (!comparePassword) {
@@ -109,25 +90,7 @@ export default {
         .send({ error: "Ocorreu um erro ao realizar o login" });
     }
   },
-  async verifyUser(request: FastifyRequest, reply: FastifyReply) {
-    try {
-      const { email, userOTP } = request.body as User;
-      const user = await prisma.usuario.findUnique({ where: { email } });
-      if (!user) {
-        return reply.send({ error: "Usuário não encontrado" });
-      }
-      if (userOTP !== user.userOTP) {
-        return reply.send({ error: "Código incorreto" });
-      } else {
-        await prisma.usuario.update({
-          where: { email },
-          data: { isUserVerified: true },
-        });
-      }
-    } catch (e) {
-      return reply.send({ error: "Ocorreu um erro ao verificar o usuário" });
-    }
-  },
+
   async findUniqueUser(request: FastifyRequest, reply: FastifyReply) {
     try {
       const { userId } = request.params as User;
