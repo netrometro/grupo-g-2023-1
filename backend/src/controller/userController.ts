@@ -45,9 +45,7 @@ export default {
         to: email,
         subject: "Código de verificação", // Subject line
         text: "Sua conta foi criada com sucesso", // plain text body
-        html:
-          "<b>Sua conta foi criada com sucesso, verifique sua conta com esse código de verificação</b>" +
-          otp, // html body
+        html: "<b>Sua conta foi criada com sucesso, verifique sua conta com esse código de verificação ${otp}</b> ", // html body
       });
       let user = await prisma.usuario.findUnique({ where: { email } });
       if (user) {
