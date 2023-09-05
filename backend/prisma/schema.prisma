@@ -18,7 +18,7 @@ model usuario {
   co2Produced Int @default(0)
   isAdmin     Boolean @default(false)
   posts post[]
-  userOTP      Int
+  userOTP      Int 
   isUserVerified Boolean @default(false)
 }
 
