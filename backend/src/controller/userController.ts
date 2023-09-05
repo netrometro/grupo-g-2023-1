@@ -104,7 +104,9 @@ export default {
       return reply.status(200).send({ email, password });
     } catch (e) {
       console.error(e);
-      return reply.status(500).send(e);
+      return reply
+        .status(500)
+        .send({ error: "Ocorreu um erro ao realizar o login" });
     }
   },
   async verifyUser(request: FastifyRequest, reply: FastifyReply) {
