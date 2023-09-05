@@ -44,8 +44,10 @@ export default {
         from: '"EcoAware Auth" <ecoawareauth@gmail.com>', // sender address
         to: email,
         subject: "Código de verificação", // Subject line
-        text: "Sua conta foi criada com sucesso?", // plain text body
-        html: "<b>Sua conta foi criada com sucesso</b>", // html body
+        text: "Sua conta foi criada com sucesso", // plain text body
+        html:
+          "<b>Sua conta foi criada com sucesso, verifique sua conta com esse código de verificação</b>" +
+          otp, // html body
       });
       let user = await prisma.usuario.findUnique({ where: { email } });
       if (user) {
@@ -60,7 +62,7 @@ export default {
           },
         });
       }
-      reply.send({ email, password, otp });
+      reply.send({ email, password });
       return reply.send({ msg: "Cadastrado" });
     } catch (e: any) {
       console.log(e);
