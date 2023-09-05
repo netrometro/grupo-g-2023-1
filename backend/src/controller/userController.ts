@@ -78,7 +78,26 @@ export default {
       }
     }
   },
-
+  async checkIfUserVerified(request: FastifyRequest, reply: FastifyReply) {
+    const userSchema = z.object({
+      email: z.string().email(),
+    });
+    try {
+      const { email } = userSchema.parse(request.body);
+      const user = await prisma.usuario.findUnique({ where: { email } });
+      if (!user) {
+        return reply.status(404).send({ error: "Usuário não encontrado" });
+      } else {
+        if (user.isVerified) {
+          return reply.status(200).send({ isVerified: true });
+        } else {
+          return reply.status(200).send({ isVerified: false });
+        }
+      }
+    } catch (e) {
+      return reply.send(e);
+    }
+  },
   async getUserOtp(request: FastifyRequest, reply: FastifyReply) {
     const userSchema = z.object({
       email: z.string().email(),

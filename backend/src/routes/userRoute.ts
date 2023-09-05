@@ -10,4 +10,5 @@ export default function (fastify: FastifyInstance) {
   fastify.get("/getUsersByCo2", UserController.getAllUsersByOrderOfCo2);
   fastify.post("/getUserOTP", UserController.getUserOtp);
   fastify.put("/updateUsertoAdmin", UserController.updateUserToAdmin);
+  fastify.post("/checkUser", UserController.checkIfUserVerified);
 }
