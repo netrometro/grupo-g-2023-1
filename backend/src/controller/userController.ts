@@ -66,14 +66,6 @@ export default {
             password,
           },
         });
-        await prisma.usuario.update({
-          where: {
-            email,
-          },
-          data: {
-            userOtpId: otp,
-          },
-        });
         return reply.send({ msg: "Cadastrado" });
       }
     } catch (e: any) {
