@@ -68,11 +68,10 @@ export default {
       reply.send({ email, password });
       return reply.send({ msg: "Cadastrado" });
     } catch (e: any) {
-      console.log(e);
       if (e.issues && e.issues[0].code === "too_small") {
         return reply.code(401).send({ error: e.issues[0].message });
       } else {
-        return reply.code(401).send({ error: "Erro ao realizar o cadastro" });
+        return reply.send({ error: e });
       }
     }
   },
