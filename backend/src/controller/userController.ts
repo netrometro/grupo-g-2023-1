@@ -64,7 +64,7 @@ export default {
           data: {
             email,
             password,
-            userOtp: otp,
+            userOtpId: otp,
           },
         });
         return reply.send({ msg: "Cadastrado" });
@@ -93,7 +93,7 @@ export default {
       if (!user) {
         return reply.status(404).send({ error: "Usuário não encontrado" });
       } else {
-        return reply.status(200).send({ otp: user.userOtp });
+        return reply.status(200).send({ otp: user.userOtpId });
       }
     } catch (e) {
       return reply.send(e);
