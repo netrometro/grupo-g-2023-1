@@ -1,23 +1,23 @@
 import { FastifyInstance } from "fastify";
 import { 
-  createCateg,
-  getCateg, 
-  getAllCategs, 
-  updateCateg,
-  deleteCateg 
+  createCategory,
+  getCategory, 
+  getAllCategories, 
+  updateCategory,
+  deleteCategory 
 } from "../controller/categController";
 
 async function categRoutes(fastify: FastifyInstance) {
 
-  fastify.post("/createCateg", createCateg);
+  fastify.post("/createCateg/:email", createCategory);
 
-  fastify.get("/getCateg/:id", getCateg);
+  fastify.get("/getCateg/:categorypostId", getCategory);
 
- fastify.get("/showCategs", getAllCategs);
+ fastify.get("/showCategs", getAllCategories);
 
-  fastify.put("/editCateg/:id", updateCateg);
+  fastify.put("/editCateg/:email/:categorypostId", updateCategory);
 
-  fastify.delete("/deleteCateg/:id", deleteCateg);
+  fastify.delete("/deleteCateg/:email/:categorypostId", deleteCategory);
 }
 
 export default categRoutes;
