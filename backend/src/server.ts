@@ -5,7 +5,9 @@ import userRoute from "./routes/userRoute";
 import postRoutes from "./routes/postRoutes";
 import categRoutes from "./routes/categRoutes";
 import infopRoutes from "./routes/infopRoutes";
+import fastifyCors from "@fastify/cors";
 const app: FastifyInstance = fastify({ logger: true });
+app.register(fastifyCors);
 
 healthCheckRoutes(app);
 userRoute(app);
