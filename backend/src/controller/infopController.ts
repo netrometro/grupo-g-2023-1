@@ -1,29 +1,20 @@
 import {FastifyReply, FastifyRequest} from "fastify";
 import { infopSchema } from "../Schema/infopSchema";
 import { prisma } from "../prisma/prismaClient";
-import { User } from "../interfaces/userInterface";
 
-export async function createInfop(
-    request: FastifyRequest,
-    reply: FastifyReply
-) {
-    const { email } = request.params as User;
+const isAdmin = (request: FastifyRequest) => {
+    const userIsAdmin = true;
+    return userIsAdmin;}
 
-    const user = await prisma.usuario.findUnique({
-        where: { email: email },
-    });
+export async function createInfop (
+    request: FastifyRequest, 
+    reply: FastifyReply){
 
-    if (!user) {
-        return reply
-            .status(404)
-            .send({ error: "Usuário não encontrado." });
-    }
-
-    if (!user.isAdmin) {
-        return reply
-            .status(403)
-            .send({ error: "Apenas administradores podem criar InfoPosts." });
-    }
+        if (!isAdmin(request)) {
+            return reply
+                .status(403)
+                .send({ error: "Permissão negada. Apenas administradores podem criar categorias." });
+        }
 
     try {
         const { 
@@ -51,11 +42,11 @@ export async function createInfop(
 }
 
 export async function getInfop(
-    request: FastifyRequest,
-    reply: FastifyReply
-) {
-    try {
-        const { infopostId } = request.params as infopSchema;
+    request: FastifyRequest, 
+    reply: FastifyReply) {
+
+    try{
+        const {infopostId} = request.params as infopSchema;
 
         const infop = await prisma.infoPost.findUnique({
             where: {
@@ -80,15 +71,15 @@ export async function getInfop(
 }
 
 export async function getAllInfops(
-    request: FastifyRequest,
-    reply: FastifyReply
-) {
-    try {
-        const infops = await prisma.infoPost.findMany();
+    request: FastifyRequest, 
+    reply: FastifyReply) {
 
+    try{
+        const infop = await prisma.infoPost.findMany();
+        
         return reply
             .status(200)
-            .send(infops);
+            .send(infop);
     } catch (error) {
         return reply
             .status(500)
@@ -96,27 +87,15 @@ export async function getAllInfops(
     }
 }
 
-export async function updateInfop(
-    request: FastifyRequest,
-    reply: FastifyReply
-) {
-    const { email } = request.params as User;
+export async function updateInfop (
+    request: FastifyRequest, 
+    reply: FastifyReply){
 
-    const user = await prisma.usuario.findUnique({
-        where: { email: email },
-    });
-
-    if (!user) {
-        return reply
-            .status(404)
-            .send({ error: "Usuário não encontrado." });
-    }
-
-    if (!user.isAdmin) {
-        return reply
-            .status(403)
-            .send({ error: "Apenas administradores podem atualizar InfoPosts." });
-    }
+        if (!isAdmin(request)) {
+            return reply
+                .status(403)
+                .send({ error: "Permissão negada. Apenas administradores podem criar categorias." });
+        }
 
     try {
         const { infopostId, title, text, categorypostId } = request.body as infopSchema;
@@ -152,26 +131,14 @@ export async function updateInfop(
 }
 
 export async function deleteInfop(
-    request: FastifyRequest,
-    reply: FastifyReply
-) {
-    const { email } = request.params as User;
-
-    const user = await prisma.usuario.findUnique({
-        where: { email: email },
-    });
-
-    if (!user) {
-        return reply
-            .status(404)
-            .send({ error: "Usuário não encontrado." });
-    }
-
-    if (!user.isAdmin) {
-        return reply
-            .status(403)
-            .send({ error: "Apenas administradores podem excluir InfoPosts." });
-    }
+    request: FastifyRequest, 
+    reply: FastifyReply){
+        
+        if (!isAdmin(request)) {
+            return reply
+                .status(403)
+                .send({ error: "Permissão negada. Apenas administradores podem criar categorias." });
+        }
 
     try {
         const { infopostId, title, text, categorypostId } = request.body as infopSchema;

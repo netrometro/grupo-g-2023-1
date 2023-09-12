@@ -3,27 +3,22 @@ import { categSchema } from '../Schema/categSchema';
 import { prisma } from "../prisma/prismaClient";
 import { User } from "../interfaces/userInterface";
 
-export async function createCategory(request: FastifyRequest, reply: FastifyReply) {
-    const { email } = request.params as User;
+const isAdmin = (request: FastifyRequest) => {
+    const userIsAdmin = true;
+    return userIsAdmin;}
 
-    const user = await prisma.usuario.findUnique({
-        where: { email: email },
-    });
+export async function createCateg (
+    request: FastifyRequest, 
+    reply: FastifyReply){
 
-    if (!user) {
-        return reply
-            .status(404)
-            .send({ error: "Usuário não encontrado." });
-    }
-
-    if (!user.isAdmin) {
-        return reply
-            .status(403)
-            .send({ error: "Apenas administradores podem criar categorias." });
-    }
-
-    try {
-        const { name } = request.body as categSchema;
+    try{
+        if (!isAdmin(request)) {
+            return reply
+                .status(403)
+                .send({ error: "Permissão negada. Apenas administradores podem criar categorias." });
+        }
+        
+        const {name} = request.body as categSchema;
 
         const category = await prisma.categoryPost.create({
             data: {
@@ -46,6 +41,12 @@ export async function getCategory (
     request: FastifyRequest, 
     reply: FastifyReply){
 
+        if (!isAdmin(request)) {
+            return reply
+                .status(403)
+                .send({ error: "Permissão negada. Apenas administradores podem criar categorias." });
+        }
+
     try{
         const {categorypostId} = request.params as categSchema;
 
@@ -67,6 +68,12 @@ export async function getAllCategories(
     request: FastifyRequest, 
     reply: FastifyReply) {
 
+        if (!isAdmin(request)) {
+            return reply
+                .status(403)
+                .send({ error: "Permissão negada. Apenas administradores podem criar categorias." });
+        }
+
     try {
         const categ = await prisma.categoryPost.findMany();
         
@@ -82,24 +89,13 @@ export async function getAllCategories(
 
 export async function updateCategory(
     request: FastifyRequest, 
-    reply: FastifyReply) {
-    const { email } = request.params as User;
+    reply: FastifyReply){
 
-    const user = await prisma.usuario.findUnique({
-        where: { email: email },
-    });
-
-    if (!user) {
-        return reply
-            .status(404)
-            .send({ error: "Usuário não encontrado." });
-    }
-
-    if (!user.isAdmin) {
-        return reply
-            .status(403)
-            .send({ error: "Apenas administradores podem atualizar categorias." });
-    }
+        if (!isAdmin(request)) {
+            return reply
+                .status(403)
+                .send({ error: "Permissão negada. Apenas administradores podem criar categorias." });
+        }
 
     try {
         const { name, categorypostId } = request.body as categSchema;
@@ -133,28 +129,17 @@ export async function updateCategory(
 
 export async function deleteCategory(
     request: FastifyRequest, 
-    reply: FastifyReply) {
+    reply: FastifyReply){
+    
+        if (!isAdmin(request)) {
+            return reply
+                .status(403)
+                .send({ error: "Permissão negada. Apenas administradores podem criar categorias." });
+        }
 
-    const { email } = request.params as User;
-
-    const user = await prisma.usuario.findUnique({
-        where: { email: email },
-    });
-
-    if (!user) {
-        return reply
-            .status(404)
-            .send({ error: "Usuário não encontrado." });
-    }
-
-    if (!user.isAdmin) {
-        return reply
-            .status(403)
-            .send({ error: "Apenas administradores podem excluir categorias." });
-    }
-
-    try {
-        const { categorypostId } = request.params as categSchema;
+        try {
+        const {categorypostId} = request.params as categSchema;
+        const {name} = request.body as categSchema;
 
         let category = await prisma.categoryPost.findUnique({
             where: {
