@@ -3,15 +3,15 @@ import { createInfop, deleteInfop, getAllInfops, getInfop, updateInfop } from ".
 
 async function infopRoutes(fastify: FastifyInstance) {
 
-  fastify.post("/createInfop", createInfop);
+  fastify.post("/createInfop/:email", createInfop);
 
-  fastify.get("/getInfop/:id", getInfop);
+  fastify.get("/getInfop/:infopostId", getInfop);
 
   fastify.get("/showInfops", getAllInfops);
 
-  fastify.put("/updateInfop/:id", updateInfop);
+  fastify.put("/updateInfop/:email/:infopostId", updateInfop);
 
-  fastify.delete("/deleteInfop/:id", deleteInfop);
+  fastify.delete("/deleteInfop/:email/:infopostId", deleteInfop);
 }
 
 export default infopRoutes;
