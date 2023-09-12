@@ -27,17 +27,9 @@ model post {
   userId Int
 }
 
-model CategoryPost {
-  categorypostId    Int           @id @default(autoincrement())
-  name              String
-  infoposts         InfoPost[]
-}
-
 model InfoPost {
   infopostId        Int           @id @default(autoincrement())
   title             String
   text              String
   created_at        DateTime      @default(now())
-  category          CategoryPost  @relation(fields: [categorypostId], references: [categorypostId])
-  categorypostId    Int 
 }
