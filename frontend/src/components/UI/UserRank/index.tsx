@@ -42,7 +42,7 @@ export default UserRank;
 const styles = StyleSheet.create({
   container: {
     height: 50,
-    width: 300,
+    width: 350,
     flexDirection: "row",
     alignItems: "center",
     borderRadius: 20,

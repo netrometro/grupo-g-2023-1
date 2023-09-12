@@ -15,7 +15,7 @@ const EcoHints = ({ navigation }: AuthScreenProps) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>EcoHints</Text> 
-      <HintType ecohints={'TRANSPORTE'} icone={<Bicycle size={45} color="blue" />} cor={'blue'} />
+      <HintType ecohints={'Transporte'} icone={<Bicycle size={45} color="blue" />} cor={'blue'} />
       <HintType ecohints={'Alimentação'} icone={<ForkKnife size={45} color="yellow" />} cor={'yellow'} />
       <HintType ecohints={'Atividades'} icone={<Person size={45} color="green" />} cor={'green'} />
       <HintType ecohints = {"Plástico"} icone={<Bag size={45} color="red" />} cor={"red"}  />
