@@ -20,14 +20,12 @@ export async function createInfop (
         const { 
             title, 
             text, 
-            categorypostId
          } = request.body as infopSchema;
 
         const infop = await prisma.infoPost.create({
             data: {
                 title: title,
                 text: text,
-                categorypostId: Number(categorypostId),
             },
         });
 
@@ -98,7 +96,7 @@ export async function updateInfop (
         }
 
     try {
-        const { infopostId, title, text, categorypostId } = request.body as infopSchema;
+        const { infopostId, title, text } = request.body as infopSchema;
 
         let infop = await prisma.infoPost.findUnique({
             where: { infopostId: Number(infopostId) },
@@ -115,7 +113,6 @@ export async function updateInfop (
                 infopostId: Number(infopostId),
                 title: title,
                 text: text,
-                categorypostId: Number(categorypostId),
             },
             data: { title, text },
         });
@@ -141,14 +138,13 @@ export async function deleteInfop(
         }
 
     try {
-        const { infopostId, title, text, categorypostId } = request.body as infopSchema;
+        const { infopostId, title, text } = request.body as infopSchema;
 
         let infop = await prisma.infoPost.findUnique({
             where: {
                 infopostId: Number(infopostId),
                 title: title,
                 text: text,
-                categorypostId: Number(categorypostId),
             },
         });
 
@@ -163,7 +159,6 @@ export async function deleteInfop(
                 infopostId: Number(infopostId),
                 title: title,
                 text: text,
-                categorypostId: Number(categorypostId),
             },
         });
 
