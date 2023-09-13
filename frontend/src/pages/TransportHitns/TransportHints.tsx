@@ -10,7 +10,6 @@ interface InfopTypeData {
   id: string;
   title: string;
   text: string;
-  onPress: () => void;
 }
 
 const TransportHints = ({ navigation }: AuthScreenProps) => {
@@ -43,22 +42,19 @@ const TransportHints = ({ navigation }: AuthScreenProps) => {
     <View style={styles.container}>
       <FunctionsButton />
       <Text style={styles.title}>Transporte</Text>
-      <InfopType title={'Use meios de transportes compartilhados'} text={"A otimização de rotas pode ajudar a reduzir o tempo de viagem e a distância percorrida pelos caminhões. Como reflexo disso, é possível minimizar o consumo de combustível e, consequentemente, as emissões derivadas da sua queima. Atualmente, a tecnologia é uma das maiores aliadas das empresas quando o assunto é otimização de rotas. Isso porque, com o auxílio de softwares específicos, é possível identificar o caminho mais eficiente para cada entrega."} />
-      {selectedInfopType ? (
-        <InfopType title={selectedInfopType.title} text={selectedInfopType.text} />
-      ) : (
         <FlatList
           data={data}
           keyExtractor={(item) => item.id}
           renderItem={({ item }) => (
             <InfopType
+              id={item.id}
               title={item.title}
               text={item.text}
+              onPress={() => handleInfopTypeClick(item)}
             />
           )}
           scrollEnabled={true}
         />
-      )}
       <Navbar navigation={navigation} />
     </View>
   );
@@ -94,5 +90,10 @@ const styles = StyleSheet.create({
     fontSize: 18,
     marginTop: 10,
     textAlign: "center",
+  },
+  flatListContainer: {
+    backgroundColor: "#1D3623",
+    height: "77%",
+    alignItems: "center",
   },
 });

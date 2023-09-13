@@ -2,22 +2,25 @@ import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 
 interface InfopTypeProps {
+    id: string;
     title: String;
     text: String;
+    onPress: () => void;
 }
 
-const InfopType = ({ title, text }: InfopTypeProps) => {
+const InfopType = ({ id, title, text, onPress }: InfopTypeProps) => {
 
 //"#C8E6C9"
-  return (
-    <View style={[styles.container]}>
-      <TouchableOpacity >
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.text}>{text}</Text>
-      </TouchableOpacity>
-    </View>
-  );
-};
+
+    return (
+      <View style={[styles.container]}>
+        <TouchableOpacity  onPress={onPress}>
+          <Text style={styles.title}>{title}</Text>
+          <Text style={styles.text}>{text}</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  };
 
 export default InfopType;
 
