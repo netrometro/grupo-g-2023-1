@@ -1,21 +1,20 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React, { ReactNode, useEffect, useState } from "react";
-import { Person, ForkKnife, Bicycle, Bag  } from "phosphor-react-native";
 
-interface EcoCateg{
-  name: String;
-}
 interface HintTypeProps {
     ecohints: string;
     icone: ReactNode;
     cor: string;
+    onPress?: () => void;
   }
   
 
-const HintType = ({ecohints, icone, cor}: HintTypeProps) => {
+const HintType = ({ecohints, icone, cor, onPress}: HintTypeProps) => {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={[styles.button , {borderColor: cor}]}>
+      <TouchableOpacity 
+      style={[styles.button , {borderColor: cor}]}
+      onPress={onPress}>
         {icone}
         <Text style={styles.buttonText}>{ecohints}</Text>
       </TouchableOpacity>
