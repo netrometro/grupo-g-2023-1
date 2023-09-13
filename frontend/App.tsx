@@ -9,6 +9,10 @@ import { AuthScreenProps } from "./src/types/PagesTypeList";
 import UserProfile from "./src/pages/UserProfile";
 import Calculator from "./src/pages/Calculator";
 import EcoHints from "./src/pages/EcoHints";
+import FoodHints from "./src/pages/Food";
+import WorkHints from "./src/pages/WorkHiints/WorkHints";
+import PlasticHints from "./src/pages/PlasticHints/PlasticHints";
+import TransportHints from "./src/pages/TransportHitns/TransportHints";
 
 const Stack = createNativeStackNavigator();
 
@@ -22,6 +26,10 @@ function App() {
         <Stack.Screen name="EcoRank" component={EcoRank} />
         <Stack.Screen name="UserProfile" component={UserProfile} />
         <Stack.Screen name="Calculator" component={Calculator} />
+        <Stack.Screen name="TransportHints" component={TransportHints} />
+        <Stack.Screen name="FoodHints" component={FoodHints} />
+        <Stack.Screen name="WorkHints" component={WorkHints} />
+        <Stack.Screen name="PlasticHints" component={PlasticHints} />
       </Stack.Navigator>
     </NavigationContainer>
   );
