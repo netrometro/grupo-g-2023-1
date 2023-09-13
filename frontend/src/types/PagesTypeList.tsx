@@ -5,6 +5,10 @@ export type LockScreenParamList = {
   EcoHints: undefined;
   EcoRank: undefined;
   Calculator: undefined;
+  TransportHints: undefined;
+  FoodHints: undefined;
+  WorkHints: undefined;
+  PlasticHints: undefined;
 };
 export type AuthScreenProps = {
   navigation: {
