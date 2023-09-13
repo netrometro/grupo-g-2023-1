@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 
 interface InfopTypeProps {
@@ -10,9 +10,11 @@ const InfopType = ({ title, text }: InfopTypeProps) => {
 
 //"#C8E6C9"
   return (
-    <View style={[styles.container, { backgroundColor: "#5A875D" }]}>
-      <Text style={styles.title}>{title}</Text>
-        <Text style={styles.text}>{text} miaaauuuuu</Text>
+    <View style={[styles.container]}>
+      <TouchableOpacity >
+        <Text style={styles.title}>{title}</Text>
+        <Text style={styles.text}>{text}</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -25,6 +27,7 @@ const styles = StyleSheet.create({
     width: 380,
     flexDirection: "row",
     alignItems: "center",
+    backgroundColor: "#C8E6C9",
     borderRadius: 20,
     paddingLeft: 10,
     marginBottom: 15,
