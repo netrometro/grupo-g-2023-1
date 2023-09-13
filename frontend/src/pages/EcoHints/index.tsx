@@ -1,24 +1,21 @@
-import { FlatList, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useEffect, useState } from "react";
+import { StyleSheet, Text, View } from "react-native";
 import Navbar from "../../components/Navbar";
 import { AuthScreenProps } from "../../types/PagesTypeList";
-import axios from "axios";
 import { Person, ForkKnife, Bicycle, Bag  } from "phosphor-react-native";
 import HintType from "../../components/UI/HintType";
-
-interface EcoCateg{
-  name: String;
-}
-
 
 const EcoHints = ({ navigation }: AuthScreenProps) => {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>EcoHints</Text> 
-      <HintType ecohints={'Transporte'} icone={<Bicycle size={45} color="blue" />} cor={'blue'} />
-      <HintType ecohints={'Alimentação'} icone={<ForkKnife size={45} color="yellow" />} cor={'yellow'} />
-      <HintType ecohints={'Atividades'} icone={<Person size={45} color="green" />} cor={'green'} />
-      <HintType ecohints = {"Plástico"} icone={<Bag size={45} color="red" />} cor={"red"}  />
+      <HintType ecohints={'Transporte'} icone={<Bicycle size={45} color="blue" />} cor={'blue'} 
+        onPress={() => { navigation.navigate("TransportHints");}} />
+      <HintType ecohints={'Alimentação'} icone={<ForkKnife size={45} color="yellow" />} cor={'yellow'} 
+        onPress={() => {return navigation.navigate("FoodHints");}} />
+      <HintType ecohints={'Atividades'} icone={<Person size={45} color="green" />} cor={'green'} 
+        onPress={() => {return navigation.navigate("WorkHints");}} />
+      <HintType ecohints = {"Plástico"} icone={<Bag size={45} color="red" />} cor={"red"}  
+        onPress={() => {return navigation.navigate("PlasticHints");}}/>
       <Navbar navigation={navigation} />
     </View>
   );
