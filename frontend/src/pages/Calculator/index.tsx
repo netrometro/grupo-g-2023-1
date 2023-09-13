@@ -4,6 +4,8 @@ import CheckBox from "expo-checkbox";
 import React from "react";
 import { TouchableOpacity } from "react-native";
 import { globalEmail } from "../GlobalVariables";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useEffect } from "react";
 import axios from "axios";
 import { AuthScreenProps } from "../../types/PagesTypeList";
 interface carFueldObjectInterface {
@@ -15,6 +17,7 @@ interface userDietInterface {
 interface RequestBody {
   email: string;
 }
+
 const Calculator = ({ navigation }: AuthScreenProps) => {
   const [eletricityAmount, setEletricityAmount] = React.useState(150);
   const [hasCar, setHasCar] = React.useState(false);
@@ -25,7 +28,23 @@ const Calculator = ({ navigation }: AuthScreenProps) => {
   const [userDiet, setUserDiet] = React.useState<string>("");
   const [cellphoneHours, setCellphoneHours] = React.useState<number>(0);
   const [showResult, setShowResult] = React.useState<boolean>(false);
-
+  const [userEmail, setUserEmail] = React.useState<string>("");
+  useEffect(() => {
+    getData();
+  }, []);
+  const getData = async () => {
+    try {
+      const info = await AsyncStorage.getItem("appData");
+      if (info) {
+        const parsedData = JSON.parse(info);
+        const email = parsedData.email;
+        setUserEmail(email);
+        return email;
+      } else return null;
+    } catch (error) {
+      console.log(error);
+    }
+  };
   const carFuelObject: carFueldObjectInterface = {
     gasolina: 2.3,
     diesel: 2.7,
@@ -68,13 +87,13 @@ const Calculator = ({ navigation }: AuthScreenProps) => {
   const co2Value: number = calculateResult();
 
   const requestData = {
-    email: globalEmail,
+    email: userEmail,
     co2: 2,
   };
   const updateCo2 = () => {
     axios
       .put("https://ecoaware-cm57.onrender.com/updateUserCo2", {
-        email: globalEmail,
+        email: userEmail,
         co2Emit: co2Value,
       } as RequestBody)
       .then((response) => {})
