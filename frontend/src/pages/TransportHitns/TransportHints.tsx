@@ -40,7 +40,6 @@ const TransportHints = ({ navigation }: AuthScreenProps) => {
 
   return (
     <View style={styles.container}>
-      <FunctionsButton />
       <Text style={styles.title}>Transporte</Text>
         <FlatList
           data={data}
@@ -55,6 +54,7 @@ const TransportHints = ({ navigation }: AuthScreenProps) => {
           )}
           scrollEnabled={true}
         />
+      <FunctionsButton />
       <Navbar navigation={navigation} />
     </View>
   );

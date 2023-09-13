@@ -1,9 +1,24 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
 export const FunctionsButton = () => {
   const [showOptions, setShowOptions] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+
+  useEffect(() => {
+    const checkAdminPermission = async () => {
+      try {
+        const response = await axios.put("https://ecoaware-cm57.onrender.com//updateUsertoAdmin");
+        setIsAdmin(response.data.isAdmin);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  
+    checkAdminPermission();
+  }, []);
+  
 
   const createInfop = async () => {
     try {
@@ -43,21 +58,23 @@ export const FunctionsButton = () => {
     setShowOptions(!showOptions);
   };
 
+  {isAdmin && <FunctionsButton />}
+
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.mainButton} onPress={toggleOptions}>
-        <Text style={styles.mainButtonText}>Opções</Text>
+        <Text style={styles.mainButtonText}>+</Text>
       </TouchableOpacity>
       {showOptions && (
         <View style={styles.optionsContainer}>
-          <TouchableOpacity style={styles.optionButton} onPress={createInfop}>
-            <Text style={styles.optionButtonText}>Criar Categoria</Text>
+          <TouchableOpacity style={styles.optionButton} onPress={isAdmin ? createInfop : undefined}>
+            <Text style={styles.optionButtonText}>Criar InfoPost</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton} onPress={editInfop}>
-            <Text style={styles.optionButtonText}>Editar Categoria</Text>
+          <TouchableOpacity style={styles.optionButton} onPress={isAdmin ? editInfop : undefined}>
+            <Text style={styles.optionButtonText}>Editar InfoPost</Text>
           </TouchableOpacity>
-          <TouchableOpacity style={styles.optionButton} onPress={deleteInfop}>
-            <Text style={styles.optionButtonText}>Deletar Categoria</Text>
+          <TouchableOpacity style={styles.optionButton} onPress={isAdmin ? deleteInfop : undefined}>
+            <Text style={styles.optionButtonText}>Deletar InfoPost</Text>
           </TouchableOpacity>
         </View>
       )}
