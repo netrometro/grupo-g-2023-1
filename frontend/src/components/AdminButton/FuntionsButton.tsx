@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, { useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet } from 'react-native';
 
-const FunctionsButton = () => {
+export const FunctionsButton = () => {
   const [showOptions, setShowOptions] = useState(false);
 
   const createInfop = async () => {
